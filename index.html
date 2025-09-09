@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operalta — Platform Prototype</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --grid-color: #f0f0f0;
+            --accent: #5B21B6;
+        }
+        
+        body {
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            background-color: #f9fafb;
+        }
+        
+        .mono {
+            font-family: 'Space Mono', monospace;
+        }
+
+        .baseline-grid {
+            background-image: linear-gradient(var(--grid-color) 1px, transparent 1px);
+            background-size: 100% 16px;
+        }
+        
+        .notion-block {
+            border-left: 3px solid var(--accent);
+            padding-left: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        
+        .audio-wave {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .audio-wave:nth-child(2) { animation-delay: 0.2s; }
+        .audio-wave:nth-child(3) { animation-delay: 0.4s; }
+        .audio-wave:nth-child(4) { animation-delay: 0.6s; }
+        .audio-wave:nth-child(5) { animation-delay: 0.8s; }
+
+        .sidebar-link {
+            transition: all 0.2s ease;
+        }
+        .sidebar-link:hover, .sidebar-link.active {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+        .sidebar-link.active {
+            font-weight: 600;
+        }
+        .hover-invert:hover {
+            background: #111827;
+            color: #fff;
+        }
+    </style>
+</head>
+<body class="text-gray-900">
+
+    <div class="flex h-screen bg-gray-50">
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 flex-shrink-0 bg-white border-r border-gray-200 flex flex-col">
+            <div class="h-16 flex items-center px-6 border-b border-gray-200">
+                <a href="#" class="font-bold text-sm tracking-wider flex items-center gap-2">
+                    <span>Operalta</span>
+                </a>
+            </div>
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <a href="#" id="nav-dashboard" class="sidebar-link active flex items-center px-4 py-2 text-sm text-gray-600 rounded-md">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    Dashboard
+                </a>
+                <a href="#" id="nav-reports" class="sidebar-link flex items-center px-4 py-2 text-sm text-gray-600 rounded-md">
+                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Reports
+                </a>
+                <a href="#" id="nav-playbooks" class="sidebar-link flex items-center px-4 py-2 text-sm text-gray-600 rounded-md">
+                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v11.494m-9-5.747h18"></path></svg>
+                    Playbooks
+                </a>
+                <a href="#" id="nav-integrations" class="sidebar-link flex items-center px-4 py-2 text-sm text-gray-600 rounded-md">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    Integrations
+                </a>
+            </nav>
+            <div class="px-4 py-4 mt-auto border-t border-gray-200">
+                <div class="flex items-center">
+                    <img class="h-8 w-8 rounded-full object-cover" src="https://placehold.co/100x100/5B21B6/FFFFFF?text=A" alt="CEO Avatar">
+                    <div class="ml-3">
+                        <p id="user-name" class="text-sm font-semibold text-gray-800">Alex (CEO)</p>
+                        <p id="user-company" class="text-xs text-gray-500">Acme Inc.</p>
+                    </div>
+                </div>
+                 <div class="mt-4 text-xs mono">
+                    <label for="view-toggle" class="flex items-center cursor-pointer">
+                        <span class="mr-2">CEO View</span>
+                        <div class="relative">
+                            <input type="checkbox" id="view-toggle" class="sr-only">
+                            <div class="block bg-gray-200 w-10 h-5 rounded-full"></div>
+                            <div class="dot absolute left-0 top-0 bg-white w-5 h-5 rounded-full transition-transform"></div>
+                        </div>
+                        <span class="ml-2">VC View</span>
+                    </label>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto">
+            <!-- CEO VIEW PAGES -->
+            <div id="ceo-view">
+                <div id="page-dashboard" class="p-8 md:p-12 baseline-grid">
+                    <header class="mb-8"><h1 class="text-3xl font-bold tracking-tight">CEO Dashboard</h1><p class="text-gray-500 mt-1 mono text-sm">Welcome back, Alex. Your augmented co-founder is ready.</p></header>
+                    <div class="bg-white p-8 border border-gray-200 rounded-lg shadow-sm mb-8"><div class="flex items-center justify-between mb-4"><h2 class="text-lg font-bold">Create Weekly Update</h2><span class="text-xs mono text-gray-500">Voice Memo → AI Synthesis → Investor Report</span></div><div class="flex items-center gap-6"><button id="start-recording-btn" class="w-16 h-16 bg-purple-700 text-white rounded-full flex items-center justify-center hover:bg-purple-800 transition-all transform hover:scale-105 shadow-lg"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg></button><div class="flex-1"><p class="font-semibold">Record a 5-minute voice memo</p><p class="text-sm text-gray-600">Summarize your week: wins, challenges, and key metrics. Our AI will do the rest.</p></div><button class="text-sm text-purple-700 hover:underline">or upload audio</button></div></div>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2">
+                            <h3 class="font-bold mb-4 pb-2 border-b border-gray-200">Recent Activity</h3>
+                            <div class="space-y-4"><div class="flex items-start gap-4 bg-white p-4 border border-gray-200 rounded-md"><div class="w-8 h-8 bg-green-100 text-green-700 rounded-full flex items-center justify-center flex-shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div><div><p class="font-semibold text-sm">"August 2025 Investor Update" sent</p><p class="text-xs text-gray-500 mono">Shared with 4 stakeholders</p></div><span class="ml-auto text-xs text-gray-400 mono">Sep 1</span></div><div class="flex items-start gap-4 bg-white p-4 border border-gray-200 rounded-md"><div class="w-8 h-8 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center flex-shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg></div><div><p class="font-semibold text-sm">New Insight: <span class="font-normal">"Engineering hiring urgency increased."</span></p><div class="notion-block"><p class="text-xs text-gray-600">Playbook suggested: <a href="#" class="font-bold text-purple-700 hover:underline">Scaling Engineering Teams</a></p></div></div><span class="ml-auto text-xs text-gray-400 mono">Sep 8</span></div></div>
+                        </div>
+                        <div>
+                            <h3 class="font-bold mb-4 pb-2 border-b border-gray-200">Key Metrics</h3>
+                            <div class="bg-white p-4 border border-gray-200 rounded-md space-y-3"><div class="text-center p-3 bg-gray-50 rounded"><p class="font-bold text-xl">€1.2M</p><p class="text-xs text-gray-600">ARR</p></div><div class="text-center p-3 bg-gray-50 rounded"><p class="font-bold text-xl text-green-600">+23%</p><p class="text-xs text-gray-600">MoM Growth</p></div><div class="text-center p-3 bg-gray-50 rounded"><p class="font-bold text-xl">18mo</p><p class="text-xs text-gray-600">Runway</p></div></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="page-recording" class="hidden p-8 md:p-12"><header class="mb-8"><h1 class="text-3xl font-bold tracking-tight">New Weekly Update</h1><p class="text-gray-500 mt-1 mono text-sm">Status: <span id="recording-status" class="text-purple-700 font-semibold">Processing...</span></p></header><div class="bg-white p-8 border border-gray-200 rounded-lg shadow-sm"><div id="processing-state"><div class="flex items-center gap-4 mb-4"><div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center"><div class="w-6 h-6 border-2 border-purple-700 border-t-transparent rounded-full animate-spin"></div></div><div class="flex-1"><div class="flex items-center gap-1 h-8"><div class="w-1 bg-purple-300 h-full audio-wave"></div><div class="w-1 bg-purple-300 h-6 audio-wave"></div><div class="w-1 bg-purple-300 h-4 audio-wave"></div><div class="w-1 bg-purple-300 h-7 audio-wave"></div><div class="w-1 bg-purple-300 h-5 audio-wave"></div><div class="w-1 bg-purple-300 h-8 audio-wave"></div><div class="w-1 bg-purple-300 h-3 audio-wave"></div><div class="w-1 bg-purple-300 h-6 audio-wave"></div><div class="w-1 bg-purple-300 h-4 audio-wave"></div><div class="w-1 bg-purple-300 h-7 audio-wave"></div></div></div><span class="mono text-xs">3:42</span></div><h3 class="font-bold text-center mt-8">AI is transcribing and synthesizing your update...</h3><p class="text-sm text-gray-600 text-center mt-2">This usually takes less than a minute. We'll assemble the first draft of your report.</p></div><div id="completed-state" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-12"><div><h4 class="font-bold text-sm mb-2">AI Transcription & Analysis</h4><div class="bg-gray-50 p-4 rounded-md max-h-96 overflow-y-auto"><p class="text-sm text-gray-700 leading-relaxed italic">"Quick update... engineering hiring remains our top priority... consider moving the Series A timeline up to Q2..."</p></div><h4 class="font-bold text-sm mb-2 mt-6">Key Insights Extracted</h4><ul class="text-sm space-y-2"><li class="flex items-start gap-3 p-2 bg-green-50 rounded-md"><span class="text-green-600 mt-1">✓</span><span><span class="font-semibold">Win:</span> Revenue target exceeded with €240k new ARR.</span></li><li class="flex items-start gap-3 p-2 bg-yellow-50 rounded-md"><span class="text-yellow-600 mt-1">!</span><span><span class="font-semibold">Challenge:</span> Engineering hiring urgency has increased.</span></li><li class="flex items-start gap-3 p-2 bg-blue-50 rounded-md"><span class="text-blue-600 mt-1">→</span><span><span class="font-semibold">Strategic Shift:</span> Series A fundraising timeline potentially moved to Q2 2026.</span></li></ul></div><div><div class="flex items-center justify-between mb-2"><h4 class="font-bold text-sm">Draft: Weekly Investor Update</h4><span class="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full">AI-Generated</span></div><div class="bg-white border border-gray-200 p-6 rounded-md shadow-inner"><div class="mb-4"><h4 class="font-bold mb-2">Executive Summary</h4><p class="text-sm text-gray-700 leading-relaxed">Strong week with 23% MoM growth. Closed 3 enterprise deals totaling €240k in new ARR...</p></div><div class="grid grid-cols-3 gap-4 mb-4"><div class="text-center p-3 bg-gray-50 rounded"><p class="font-bold text-lg">€1.2M</p><p class="text-xs text-gray-600">ARR</p></div><div class="text-center p-3 bg-gray-50 rounded"><p class="font-bold text-lg text-green-600">+23%</p><p class="text-xs text-gray-600">Growth</p></div><div class="text-center p-3 bg-gray-50 rounded"><p class="font-bold text-lg">18mo</p><p class="text-xs text-gray-600">Runway</p></div></div><p class="text-xs text-gray-500 mono mb-4">Metrics synced from Stripe & Notion.</p><button class="w-full bg-purple-700 text-white py-2 text-sm font-bold hover:bg-purple-800 transition-colors rounded-md">Finalize & Share Report →</button></div></div></div></div></div>
+                <div id="page-reports" class="hidden p-8 md:p-12"><header class="mb-8 flex items-center justify-between"><div class=""><h1 class="text-3xl font-bold tracking-tight">Reports</h1><p class="text-gray-500 mt-1 mono text-sm">Manage and review all your investor and board updates.</p></div><button id="create-new-report-btn" class="bg-purple-700 text-white px-4 py-2 text-sm font-bold hover:bg-purple-800 transition-colors rounded-md">Create New Report</button></header><div class="bg-white border border-gray-200 rounded-lg shadow-sm divide-y divide-gray-200"><div class="p-4 grid grid-cols-5 items-center text-xs mono text-gray-500"><div class="col-span-2">Title</div><div>Status</div><div>Recipients</div><div>Date</div></div><div class="p-4 grid grid-cols-5 items-center hover:bg-gray-50"><div class="col-span-2 font-semibold text-sm">August 2025 Investor Update</div><div><span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">Sent</span></div><div><div class="flex -space-x-2"><img src="https://placehold.co/32x32/7c3aed/FFFFFF?text=B" class="w-6 h-6 rounded-full border-2 border-white"><img src="https://placehold.co/32x32/16a34a/FFFFFF?text=C" class="w-6 h-6 rounded-full border-2 border-white"><img src="https://placehold.co/32x32/f97316/FFFFFF?text=D" class="w-6 h-6 rounded-full border-2 border-white"></div></div><div class="text-sm text-gray-600 mono">Sep 1, 2025</div><div class="text-right"><a href="#" class="text-purple-700 text-sm hover:underline">View</a></div></div><div class="p-4 grid grid-cols-5 items-center hover:bg-gray-50"><div class="col-span-2 font-semibold text-sm">Q3 2025 Board Deck</div><div><span class="text-xs bg-gray-100 text-gray-800 px-2 py-0.5 rounded-full">Draft</span></div><div>-</div><div class="text-sm text-gray-600 mono">Aug 28, 2025</div><div class="text-right"><a href="#" class="text-purple-700 text-sm hover:underline">Edit</a></div></div></div></div>
+                <div id="page-playbooks" class="hidden p-8 md:p-12"><header class="mb-8"><h1 class="text-3xl font-bold tracking-tight">Playbook Library</h1><p class="text-gray-500 mt-1 mono text-sm">1,247 playbooks from top performers. Curated best practices.</p></header><div class="grid grid-cols-3 md:grid-cols-6 gap-2 text-center mb-12"><div class="hover-invert border border-gray-300 aspect-square flex flex-col items-center justify-center cursor-pointer p-2"><span class="text-2xl mb-1">⬆</span><span class="text-xs font-bold">GROWTH</span></div><div class="hover-invert border border-gray-300 aspect-square flex flex-col items-center justify-center cursor-pointer p-2"><span class="text-2xl mb-1">◐</span><span class="text-xs font-bold">HIRING</span></div><div class="hover-invert border border-gray-300 aspect-square flex flex-col items-center justify-center cursor-pointer p-2"><span class="text-2xl mb-1">◈</span><span class="text-xs font-bold">FUNDRAISING</span></div><div class="hover-invert border border-gray-300 aspect-square flex flex-col items-center justify-center cursor-pointer p-2"><span class="text-2xl mb-1">◉</span><span class="text-xs font-bold">PRODUCT</span></div><div class="hover-invert border border-gray-300 aspect-square flex flex-col items-center justify-center cursor-pointer p-2"><span class="text-2xl mb-1">▣</span><span class="text-xs font-bold">SALES</span></div><div class="hover-invert border border-gray-300 aspect-square flex flex-col items-center justify-center cursor-pointer p-2"><span class="text-2xl mb-1">◊</span><span class="text-xs font-bold">LEGAL</span></div></div><div class="grid grid-cols-1 md:grid-cols-3 gap-8"><div><h3 class="font-bold mb-4 pb-2 border-b border-gray-200">Series A Playbooks</h3><ul class="space-y-1 text-sm"><li class="group cursor-pointer p-2 -mx-2 rounded-md hover:bg-white"><div class="flex justify-between"><span>Scaling Engineering Teams</span><span class="mono text-xs text-gray-500">REVOLUT</span></div><p class="text-xs text-gray-500 hidden group-hover:block notion-block">From 10 to 100 engineers.</p></li><li class="group cursor-pointer p-2 -mx-2 rounded-md hover:bg-white"><div class="flex justify-between"><span>Board Meeting Excellence</span><span class="mono text-xs text-gray-500">SPOTIFY</span></div></li></ul></div><div><h3 class="font-bold mb-4 pb-2 border-b border-gray-200">Crisis Management</h3><ul class="space-y-1 text-sm"><li class="group cursor-pointer p-2 -mx-2 rounded-md hover:bg-white"><div class="flex justify-between"><span>Runway Extension</span><span class="mono text-xs text-gray-500">BOOKING</span></div></li><li class="group cursor-pointer p-2 -mx-2 rounded-md hover:bg-white"><div class="flex justify-between"><span>Pivot Playbook</span><span class="mono text-xs text-gray-500">WISE</span></div><p class="text-xs text-gray-500 hidden group-hover:block notion-block">From P2P to B2B.</p></li></ul></div><div><h3 class="font-bold mb-4 pb-2 border-b border-gray-200">VC Collaboration</h3><ul class="space-y-1 text-sm"><li class="group cursor-pointer p-2 -mx-2 rounded-md hover:bg-white"><div class="flex justify-between"><span>Weekly Partner Sync</span><span class="mono text-xs text-gray-500">INDEX</span></div></li><li class="group cursor-pointer p-2 -mx-2 rounded-md hover:bg-white"><div class="flex justify-between"><span>Portfolio Intelligence</span><span class="mono text-xs text-gray-500">ATOMICO</span></div></li></ul></div></div></div>
+                <div id="page-integrations" class="hidden p-8 md:p-12"><header class="mb-8"><h1 class="text-3xl font-bold tracking-tight">Integrations</h1><p class="text-gray-500 mt-1 mono text-sm">Connect your tools to automate data collection.</p></header><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-white border-2 border-purple-700 p-6 rounded-lg shadow-sm"><div class="flex items-center justify-between mb-4"><h3 class="font-bold text-lg">Notion</h3><span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">Connected</span></div><p class="text-sm text-gray-600 mb-4">Sync your product roadmaps, KPIs, and team directories.</p><button class="w-full bg-gray-200 text-gray-700 py-2 text-sm font-bold rounded-md">Manage</button></div>
+                    <div class="bg-white border border-gray-200 p-6 rounded-lg shadow-sm"><div class="flex items-center justify-between mb-4"><h3 class="font-bold text-lg">Stripe</h3><span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">Connected</span></div><p class="text-sm text-gray-600 mb-4">Automatically pull financial metrics like ARR and MoM growth.</p><button class="w-full bg-gray-200 text-gray-700 py-2 text-sm font-bold rounded-md">Manage</button></div>
+                    <div class="bg-white border border-gray-200 p-6 rounded-lg shadow-sm"><div class="flex items-center justify-between mb-4"><h3 class="font-bold text-lg">Slack</h3><button class="text-sm font-bold bg-purple-700 text-white px-4 py-1 rounded-md hover:bg-purple-800">Connect</button></div><p class="text-sm text-gray-600">Get notifications for key insights or when reports are viewed.</p></div>
+                    <div class="bg-white border border-gray-200 p-6 rounded-lg shadow-sm"><div class="flex items-center justify-between mb-4"><h3 class="font-bold text-lg">Linear</h3><button class="text-sm font-bold bg-purple-700 text-white px-4 py-1 rounded-md hover:bg-purple-800">Connect</button></div><p class="text-sm text-gray-600">Sync product velocity and engineering sprint data.</p></div>
+                </div></div>
+            </div>
+            <!-- VC VIEW PAGES -->
+            <div id="vc-view" class="hidden">
+                 <div id="page-vc-dashboard" class="p-8 md:p-12 baseline-grid">
+                    <header class="mb-8"><h1 class="text-3xl font-bold tracking-tight">Portfolio Intelligence</h1><p class="text-gray-500 mt-1 mono text-sm">Real-time insights from across the Atomic Ventures portfolio.</p></header>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2">
+                             <h3 class="font-bold mb-4 pb-2 border-b border-gray-200">Portfolio Health</h3>
+                             <div class="bg-white border border-gray-200 rounded-lg shadow-sm divide-y divide-gray-200">
+                                <div class="p-4 grid grid-cols-6 items-center text-xs mono text-gray-500"><div class="col-span-2">Company</div><div>Health</div><div>ARR</div><div>Runway</div><div></div></div>
+                                <div class="p-4 grid grid-cols-6 items-center hover:bg-gray-50"><div class="col-span-2 font-semibold text-sm">Acme Inc.</div><div><span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">On Track</span></div><div class="text-sm text-gray-600 mono">€1.2M</div><div class="text-sm text-gray-600 mono">18mo</div><div class="text-right col-span-2"><a href="#" class="text-purple-700 text-sm hover:underline">View Updates</a></div></div>
+                                <div class="p-4 grid grid-cols-6 items-center hover:bg-gray-50"><div class="col-span-2 font-semibold text-sm">Innovate LLC</div><div><span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full">Needs Attention</span></div><div class="text-sm text-gray-600 mono">€4.5M</div><div class="text-sm text-gray-600 mono">6mo</div><div class="text-right col-span-2"><a href="#" class="text-purple-700 text-sm hover:underline">View Updates</a></div></div>
+                                 <div class="p-4 grid grid-cols-6 items-center hover:bg-gray-50"><div class="col-span-2 font-semibold text-sm">FutureTech</div><div><span class="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded-full">At Risk</span></div><div class="text-sm text-gray-600 mono">€800k</div><div class="text-sm text-gray-600 mono">3mo</div><div class="text-right col-span-2"><a href="#" class="text-purple-700 text-sm hover:underline">View Updates</a></div></div>
+                             </div>
+                        </div>
+                        <div>
+                             <h3 class="font-bold mb-4 pb-2 border-b border-gray-200">Cross-Portfolio Insights</h3>
+                             <div class="space-y-4">
+                                <div class="bg-white p-4 border border-gray-200 rounded-md"><p class="font-semibold text-sm">Hiring Bottleneck Identified</p><p class="text-xs text-gray-500">3 companies, including <span class="font-semibold">Acme Inc.</span>, flagged challenges hiring senior engineers this week.</p><div class="notion-block"><a href="#" class="text-xs text-purple-700 hover:underline font-bold">Share "Scaling Engineering Teams" Playbook</a></div></div>
+                                <div class="bg-white p-4 border border-gray-200 rounded-md"><p class="font-semibold text-sm">Positive Churn Trend</p><p class="text-xs text-gray-500">Customer churn rates have decreased by an average of 15% across 5 B2B SaaS companies in Q3.</p></div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Page Containers
+            const ceoView = document.getElementById('ceo-view');
+            const vcView = document.getElementById('vc-view');
+            
+            const pages = {
+                dashboard: document.getElementById('page-dashboard'),
+                recording: document.getElementById('page-recording'),
+                reports: document.getElementById('page-reports'),
+                playbooks: document.getElementById('page-playbooks'),
+                integrations: document.getElementById('page-integrations'),
+                vcDashboard: document.getElementById('page-vc-dashboard'),
+            };
+
+            // Navigation Links
+            const navLinks = {
+                dashboard: document.getElementById('nav-dashboard'),
+                reports: document.getElementById('nav-reports'),
+                playbooks: document.getElementById('nav-playbooks'),
+                integrations: document.getElementById('nav-integrations'),
+            };
+            
+            // Interactive Elements
+            const startRecordingBtn = document.getElementById('start-recording-btn');
+            const createNewReportBtn = document.getElementById('create-new-report-btn');
+            const processingState = document.getElementById('processing-state');
+            const completedState = document.getElementById('completed-state');
+            const recordingStatus = document.getElementById('recording-status');
+            const viewToggle = document.getElementById('view-toggle');
+            const userName = document.getElementById('user-name');
+            const userCompany = document.getElementById('user-company');
+
+            let currentView = 'ceo'; // 'ceo' or 'vc'
+            let currentPage = 'dashboard';
+
+            function showPage(pageName) {
+                currentPage = pageName;
+                Object.values(pages).forEach(page => {
+                    if (page) page.classList.add('hidden');
+                });
+                Object.values(navLinks).forEach(link => {
+                    if(link) link.classList.remove('active');
+                });
+                
+                if (pages[pageName]) {
+                    pages[pageName].classList.remove('hidden');
+                }
+                
+                // Special handling for dashboard toggle
+                if (pageName === 'dashboard' && currentView === 'vc') {
+                    pages.dashboard.classList.add('hidden');
+                    pages.vcDashboard.classList.remove('hidden');
+                }
+
+                if (navLinks[pageName]) {
+                    navLinks[pageName].classList.add('active');
+                }
+            }
+
+            function updateView() {
+                if (currentView === 'ceo') {
+                    ceoView.classList.remove('hidden');
+                    vcView.classList.add('hidden');
+                    userName.textContent = 'Alex (CEO)';
+                    userCompany.textContent = 'Acme Inc.';
+                    // Show CEO pages
+                    navLinks.reports.style.display = 'flex';
+                    navLinks.integrations.style.display = 'flex';
+
+                } else { // VC View
+                    ceoView.classList.add('hidden');
+                    vcView.classList.remove('hidden');
+                    userName.textContent = 'Ben (Partner)';
+                    userCompany.textContent = 'Atomic Ventures';
+                    // Hide pages not relevant for VC
+                    navLinks.reports.style.display = 'none';
+                    navLinks.integrations.style.display = 'none';
+                }
+                // Always show the correct dashboard for the current view
+                showPage(currentPage === 'dashboard' ? 'dashboard' : currentPage);
+            }
+            
+            function startUpdateWorkflow() {
+                 showPage('recording');
+                
+                processingState.classList.remove('hidden');
+                completedState.classList.add('hidden');
+                recordingStatus.textContent = 'Processing...';
+                
+                setTimeout(() => {
+                    processingState.classList.add('hidden');
+                    completedState.classList.remove('hidden');
+                    recordingStatus.textContent = 'Synthesis Complete';
+                }, 4000);
+            }
+
+            // --- Event Listeners ---
+            Object.keys(navLinks).forEach(key => {
+                navLinks[key].addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showPage(key);
+                });
+            });
+
+            startRecordingBtn.addEventListener('click', startUpdateWorkflow);
+            createNewReportBtn.addEventListener('click', startUpdateWorkflow);
+
+            viewToggle.addEventListener('change', () => {
+                const dot = viewToggle.nextElementSibling.nextElementSibling;
+                if (viewToggle.checked) {
+                    currentView = 'vc';
+                    dot.style.transform = 'translateX(1.25rem)';
+                } else {
+                    currentView = 'ceo';
+                    dot.style.transform = 'translateX(0)';
+                }
+                updateView();
+            });
+
+            // Initial setup
+            updateView();
+            showPage('dashboard');
+        });
+    </script>
+    <style>
+        #view-toggle:checked + div + div {
+            transform: translateX(1.25rem); /* 20px */
+            background-color: var(--accent);
+        }
+        #view-toggle:checked + div {
+             background-color: #d1fae5;
+        }
+    </style>
+</body>
+</html>
+
