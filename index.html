@@ -122,6 +122,7 @@
 <body class="text-gray-900 overflow-x-hidden">
 
     <div class="relative min-h-screen md:flex">
+        <!-- Mobile Header -->
         <div class="md:hidden flex justify-between items-center bg-white border-b border-gray-200 p-4 sticky top-0 z-40">
             <a href="#" class="font-bold text-sm tracking-wider">Operalta</a>
             <button id="mobile-menu-btn">
@@ -129,6 +130,7 @@
             </button>
         </div>
 
+        <!-- Sidebar Navigation -->
         <aside id="sidebar" class="w-64 flex-shrink-0 bg-white border-r border-gray-200 flex flex-col fixed inset-y-0 left-0 z-50 transform -translate-x-full md:relative md:translate-x-0">
             <div class="h-16 flex items-center px-6 border-b border-gray-200">
                 <a href="#" class="font-bold text-sm tracking-wider flex items-center gap-2"><span>Operalta</span></a>
@@ -169,6 +171,7 @@
             </div>
         </aside>
 
+        <!-- Main Content Area -->
         <main class="flex-1">
             <div id="ceo-view">
                 <div id="page-dashboard" class="p-4 sm:p-8 md:p-12 baseline-grid">
@@ -187,15 +190,19 @@
                     <header class="mb-8"><h1 class="text-2xl sm:text-3xl font-bold tracking-tight">New Weekly Update</h1></header>
                     <div id="processing-state" class="hidden text-center py-16"><div class="inline-block w-8 h-8 border-2 border-purple-700 border-t-transparent rounded-full animate-spin mb-4"></div><h3 id="processing-status" class="font-bold">Processing audio...</h3><p class="text-sm text-gray-600 mt-2">This usually takes less than a minute.</p></div>
                     <div id="completed-state" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <!-- AI Analysis -->
                         <div id="extracted-intelligence">
                              <h4 class="font-bold text-sm mb-4">Extracted Intelligence</h4>
                              <div class="bg-white p-6 border border-gray-200 rounded-lg space-y-4">
-                                </div>
+                                <!-- Content injected here -->
+                             </div>
                         </div>
+                        <!-- Strategic Update -->
                         <div id="strategic-update">
                             <h4 class="font-bold text-sm mb-4">Strategic Update</h4>
                             <div class="bg-white border-2 border-gray-200 p-6 rounded-lg shadow-lg">
-                                </div>
+                                <!-- Content injected here -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -212,7 +219,8 @@
                         <table class="w-full text-sm">
                             <thead class="bg-gray-50"><tr class="text-left text-xs text-gray-500 uppercase tracking-wider"><th class="p-4 font-semibold">Date</th><th class="p-4 font-semibold">Title</th><th class="p-4 font-semibold">Status</th><th class="p-4 font-semibold hidden md:table-cell">Key Metric</th><th class="p-4"></th></tr></thead>
                             <tbody class="divide-y divide-gray-200">
-                                </tbody>
+                                <!-- Rows will be injected by JavaScript -->
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -233,7 +241,8 @@
                          <div class="playbook-category-btn aspect-square flex flex-col items-center justify-center cursor-pointer p-2 rounded-md" data-category="Legal"><span class="text-2xl mb-1">◊</span><span class="text-xs font-bold">LEGAL</span></div>
                     </div>
                      <div id="ceo-playbook-list" class="space-y-8">
-                        </div>
+                        <!-- Playbook content will be injected here by JS -->
+                    </div>
                 </div>
 
                 <div id="page-integrations" class="hidden p-4 sm:p-8 md:p-12">
@@ -289,7 +298,8 @@
                     </div>
 
                     <div id="vc-portfolio-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        </div>
+                        <!-- Portfolio companies injected by JS -->
+                    </div>
                 </div>
                  <div id="page-vc-playbooks" class="hidden p-4 sm:p-8 md:p-12">
                      <header class="mb-8 flex justify-between items-baseline">
@@ -331,6 +341,7 @@
             </div>
         </div>
 
+        <!-- Generic Modal -->
         <div id="modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 z-50 flex items-center justify-center p-4">
             <div id="modal-overlay" class="absolute inset-0"></div>
             <div id="modal-content" class="modal-content bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto relative transform scale-95 opacity-0">
@@ -340,7 +351,8 @@
                         <button id="modal-close-btn" class="text-gray-400 hover:text-gray-600 text-3xl leading-none">&times;</button>
                     </div>
                     <div id="modal-body" class="py-6">
-                        </div>
+                        <!-- Modal content goes here -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -352,6 +364,7 @@
 
         const MODEL_NAME = 'gemini-1.5-flash';
 
+        // --- DEBUGGED DictationService CLASS ---
         class DictationService {
             constructor(options) {
                 this.genAI = null;
@@ -361,7 +374,9 @@
                 
                 if (this.apiKey) {
                     try {
-                        this.genAI = new GoogleGenAI(this.apiKey);
+                        // FIX: Pass API key inside a configuration object
+                        this.genAI = new GoogleGenAI({ apiKey: this.apiKey });
+                        // FIX: Initialize models using getGenerativeModel
                         this.textModel = this.genAI.getGenerativeModel({ model: MODEL_NAME });
                         this.jsonModel = this.genAI.getGenerativeModel({
                             model: MODEL_NAME,
@@ -397,7 +412,7 @@
             }
             
             isReady() {
-                return this.genAI !== null && this.jsonModel !== null;
+                return this.genAI !== null && this.jsonModel !== null && this.textModel !== null;
             }
 
             bindEventListeners() {
@@ -411,4 +426,563 @@
                 if (!this.liveWaveformCanvas || !this.liveWaveformCtx) return;
                 const canvas = this.liveWaveformCanvas;
                 const dpr = window.devicePixelRatio || 1;
-                const rect = canvas.getBounding
+                const rect = canvas.getBoundingClientRect();
+                canvas.width = rect.width * dpr;
+                canvas.height = rect.height * dpr;
+                this.liveWaveformCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            }
+
+            async toggleRecording() {
+                if (!this.isReady()) {
+                    console.error("Dictation service not ready. API Key might be missing or invalid.");
+                    this.statusTextElement.textContent = 'API Key invalid.';
+                    this.statusTextElement.style.color = 'red';
+                    return;
+                }
+                this.isRecording ? await this.stopRecording() : await this.startRecording();
+            }
+            
+            async startRecording() {
+                try {
+                    this.audioChunks = [];
+                    this.statusTextElement.textContent = 'Requesting microphone...';
+                    this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    
+                    this.mediaRecorder = new MediaRecorder(this.stream);
+                    this.mediaRecorder.ondataavailable = e => { if (e.data.size > 0) this.audioChunks.push(e.data) };
+                    this.mediaRecorder.onstop = () => {
+                        if (this.onRecordingStop) this.onRecordingStop();
+                        this.stopLiveDisplay();
+                        if (this.audioChunks.length > 0) {
+                            const audioBlob = new Blob(this.audioChunks, { type: this.mediaRecorder?.mimeType || 'audio/webm' });
+                            this.processAudio(audioBlob);
+                        }
+                        if (this.stream) this.stream.getTracks().forEach(track => track.stop());
+                    };
+
+                    this.mediaRecorder.start();
+                    this.isRecording = true;
+                    this.recordButton.classList.add('recording');
+                    this.recordButton.title = 'Stop Recording';
+                    this.startLiveDisplay();
+                    if(this.onRecordingStart) this.onRecordingStart();
+
+                } catch (error) {
+                    console.error("Error starting recording:", error);
+                    this.statusTextElement.textContent = 'Microphone access denied.';
+                }
+            }
+            
+            async stopRecording() {
+                if (this.mediaRecorder && this.isRecording) {
+                    this.mediaRecorder.stop();
+                    this.isRecording = false;
+                    this.recordButton.classList.remove('recording');
+                    this.recordButton.title = 'Start Recording';
+                    this.statusTextElement.textContent = 'Processing...';
+                }
+            }
+            
+            startLiveDisplay() {
+                this.recordingInterface.classList.add('is-live');
+                ['liveRecordingTitle', 'liveWaveformCanvas', 'liveRecordingTimerDisplay'].forEach(id => document.getElementById(id)?.classList.remove('hidden'));
+                this.setupCanvasDimensions();
+                const icon = this.recordButton.querySelector('i');
+                if(icon) { icon.classList.remove('fa-microphone'); icon.classList.add('fa-stop'); }
+                this.setupAudioVisualizer();
+                this.drawLiveWaveform();
+                this.recordingStartTime = Date.now();
+                if (this.timerIntervalId) clearInterval(this.timerIntervalId);
+                this.timerIntervalId = setInterval(() => this.updateLiveTimer(), 50);
+            }
+
+            stopLiveDisplay() {
+                 this.recordingInterface.classList.remove('is-live');
+                 setTimeout(() => this.recordingInterface.classList.add('hidden'), 500);
+                ['liveRecordingTitle', 'liveWaveformCanvas', 'liveRecordingTimerDisplay'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
+                const icon = this.recordButton.querySelector('i');
+                if(icon) { icon.classList.remove('fa-stop'); icon.classList.add('fa-microphone'); }
+                if (this.waveformDrawingId) cancelAnimationFrame(this.waveformDrawingId);
+                if (this.timerIntervalId) clearInterval(this.timerIntervalId);
+                if (this.audioContext && this.audioContext.state !== 'closed') this.audioContext.close();
+                this.audioContext = null;
+            }
+
+            setupAudioVisualizer() {
+                if (!this.stream) return;
+                this.audioContext = new AudioContext();
+                const source = this.audioContext.createMediaStreamSource(this.stream);
+                this.analyserNode = this.audioContext.createAnalyser();
+                this.analyserNode.fftSize = 256;
+                this.waveformDataArray = new Uint8Array(this.analyserNode.frequencyBinCount);
+                source.connect(this.analyserNode);
+            }
+
+            drawLiveWaveform() {
+                if (!this.isRecording) return;
+                requestAnimationFrame(() => this.drawLiveWaveform());
+                if (!this.analyserNode) return;
+                this.analyserNode.getByteFrequencyData(this.waveformDataArray);
+                const ctx = this.liveWaveformCtx, canvas = this.liveWaveformCanvas;
+                if(!ctx || !canvas) return;
+                ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+                const numBars = this.waveformDataArray.length * 0.5;
+                const barWidth = canvas.clientWidth / numBars * 0.7;
+                let x = 0;
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--color-recording').trim();
+                for (let i = 0; i < numBars; i++) {
+                    const barHeight = (this.waveformDataArray[i] / 255) * canvas.clientHeight;
+                    ctx.fillRect(x, (canvas.clientHeight - barHeight) / 2, barWidth, barHeight);
+                    x += barWidth * 1.3;
+                }
+            }
+            
+            updateLiveTimer() {
+                const elapsedMs = Date.now() - this.recordingStartTime;
+                const minutes = Math.floor(elapsedMs / 60000);
+                const seconds = Math.floor((elapsedMs % 60000) / 1000);
+                const hundredths = Math.floor((elapsedMs % 1000) / 10);
+                this.liveRecordingTimerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(hundredths).padStart(2, '0')}`;
+            }
+
+            async processAudio(audioBlob) {
+                const base64Audio = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result.split(',')[1]);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(audioBlob);
+                });
+
+                const audioPart = {
+                    inlineData: {
+                        mimeType: audioBlob.type,
+                        data: base64Audio
+                    }
+                };
+                
+                await this.getTranscription(audioPart);
+            }
+
+            async getTranscription(audioPart) {
+                try {
+                    const prompt = 'Please provide a verbatim transcript of this audio recording.';
+                    // FIX: Call generateContent on the model instance, and pass parts array
+                    const result = await this.textModel.generateContent([prompt, audioPart]);
+                    const transcription = result.response.text();
+                    this.getPolishedNote(transcription);
+                } catch (error) { 
+                    console.error("Error during transcription:", error);
+                    this.onProcessingComplete(null, null, { error: `Transcription failed: ${error.message}` }); 
+                }
+            }
+
+            async getPolishedNote(rawTranscription) {
+                 try {
+                    if (!rawTranscription.trim()) { 
+                        this.onProcessingComplete(null, rawTranscription, { arr: 'N/A', growth: 'N/A', runway: 'N/A' });
+                        return;
+                    }
+                    
+                    const prompt = `Analyze the following raw transcript of a CEO's weekly update and extract key information. Here is the transcript: --- ${rawTranscription} ---`;
+
+                    // FIX: Call generateContent on the jsonModel instance
+                    const result = await this.jsonModel.generateContent(prompt);
+                    const responseText = result.response.text();
+                    const data = JSON.parse(responseText);
+                    this.onProcessingComplete(data, rawTranscription, null);
+
+                } catch (error) { 
+                    console.error("Error during polishing:", error);
+                    this.onProcessingComplete(null, rawTranscription, { error: `AI analysis failed: ${error.message}` });
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            let dictationService = null;
+            let currentView = 'ceo';
+            let latestGeneratedReport = {};
+            let activePlaybookCategories = [];
+
+            const ui = {
+                sidebar: document.getElementById('sidebar'),
+                mobileMenuBtn: document.getElementById('mobile-menu-btn'),
+                ceoView: document.getElementById('ceo-view'),
+                vcView: document.getElementById('vc-view'),
+                ceoNav: document.getElementById('ceo-nav'),
+                vcNav: document.getElementById('vc-nav'),
+                ceoPlaybookList: document.getElementById('ceo-playbook-list'),
+                playbookCategoryFilters: document.getElementById('playbook-category-filters'),
+                vcPortfolioList: document.getElementById('vc-portfolio-list'),
+                reportsTableBody: document.querySelector('#page-reports tbody'),
+
+                pages: {
+                     dashboard: document.getElementById('page-dashboard'), recording: document.getElementById('page-recording'), reports: document.getElementById('page-reports'), playbooks: document.getElementById('page-playbooks'), integrations: document.getElementById('page-integrations'), settings: document.getElementById('page-settings'),
+                     vcDashboard: document.getElementById('page-vc-dashboard'), vcPlaybooks: document.getElementById('page-vc-playbooks'), vcSettings: document.getElementById('page-vc-settings'),
+                },
+                navLinks: { 
+                    ceo: { dashboard: document.getElementById('nav-dashboard'), reports: document.getElementById('nav-reports'), playbooks: document.getElementById('nav-playbooks'), integrations: document.getElementById('nav-integrations'), settings: document.getElementById('nav-settings') },
+                    vc: { dashboard: document.getElementById('nav-vc-dashboard'), playbooks: document.getElementById('nav-vc-playbooks'), settings: document.getElementById('nav-vc-settings'), }
+                },
+                startRecordingBtn: document.getElementById('start-recording-btn'), newReportBtn: document.getElementById('new-report-btn'), recordButton: document.getElementById('recordButton'),
+                recordingInterface: document.getElementById('recording-interface'), processingState: document.getElementById('processing-state'), processingStatus: document.getElementById('processing-status'), completedState: document.getElementById('completed-state'),
+                
+                extractedIntelligenceContainer: document.getElementById('extracted-intelligence'),
+                strategicUpdateContainer: document.getElementById('strategic-update'),
+
+                authorPlaybookBtn: document.getElementById('author-playbook-btn'),
+
+                apiKeyBanner: document.getElementById('api-key-banner'), bannerSettingsLink: document.getElementById('banner-settings-link'), apiKeyInput: document.getElementById('api-key-input'),
+                saveApiKeyBtn: document.getElementById('save-api-key-btn'), apiKeyStatus: document.getElementById('api-key-status'),
+                viewToggle: document.getElementById('view-toggle'), userName: document.getElementById('user-name'), userCompany: document.getElementById('user-company'), userAvatar: document.getElementById('user-avatar'),
+                ceoLabel: document.getElementById('ceo-label'), vcLabel: document.getElementById('vc-label'),
+
+                modal: document.getElementById('modal'), modalOverlay: document.getElementById('modal-overlay'), modalContent: document.getElementById('modal-content'),
+                modalTitle: document.getElementById('modal-title'), modalBody: document.getElementById('modal-body'), modalCloseBtn: document.getElementById('modal-close-btn'),
+            };
+
+            let db = {
+                companies: {
+                    innovate: { name: 'Innovate Inc.', status: 'On Track', metrics: { arr: '€2.1M', growth: '+18%', runway: '24mo' } },
+                    quantum: { name: 'QuantumLeap', status: 'Needs Attention', metrics: { arr: '€800K', growth: '-5%', runway: '9mo' } },
+                    synergy: { name: 'Synergy AI', status: 'On Track', metrics: { arr: '€4.5M', growth: '+25%', runway: '16mo' } },
+                    dataforge: { name: 'DataForge', status: 'On Track', metrics: { arr: '€1.5M', growth: '+12%', runway: '20mo' } },
+                    nextech: { name: 'NexTech', status: 'On Track', metrics: { arr: '€3.2M', growth: '+15%', runway: '18mo' } },
+                    cloudscape: { name: 'Cloudscape', status: 'Needs Attention', metrics: { arr: '€950K', growth: '+2%', runway: '11mo' } },
+                    biogen: { name: 'BioGen', status: 'On Track', metrics: { arr: '€1.8M', growth: '+20%', runway: '22mo' } },
+                    finwise: { name: 'FinWise', status: 'On Track', metrics: { arr: '€5.1M', growth: '+19%', runway: '15mo' } },
+                    logix: { name: 'Logix', status: 'On Track', metrics: { arr: '€2.8M', growth: '+14%', runway: '19mo' } },
+                    zenith: { name: 'Zenith VR', status: 'On Track', metrics: { arr: '€1.1M', growth: '+30%', runway: '14mo' } },
+                },
+                reports: {},
+                playbooks: {
+                    'plg': { category: 'Growth', title: 'Product-Led Growth Engine', company: 'SLACK', content: '<h3>Key Idea</h3><p>Focus on making the product itself the primary driver of user acquisition, conversion, and expansion.</p><ul><li>Freemium model to reduce friction.</li><li>Seamless user onboarding.</li><li>Built-in virality (e.g., inviting colleagues).</li></ul>' },
+                    'outbound': { category: 'Growth', title: 'Outbound Sales Cadence', company: 'HUBSPOT', content: '<h3>Key Idea</h3><p>A structured sequence of touchpoints (email, call, social) to engage prospects.</p><ol><li>Day 1: Personalized Email</li><li>Day 3: LinkedIn Connection Request</li><li>Day 5: Follow-up Email + Call</li></ol>' },
+                    'eng-hiring': { category: 'Hiring', title: 'Scaling Engineering Teams', company: 'REVOLUT', content: `<h3>Key Principles</h3><ul><li><strong>Hire for Slope, Not Just Experience:</strong> Look for candidates with a steep learning curve and high potential, not just years on a resume.</li><li><strong>Bar Raiser Interviews:</strong> Involve a senior engineer from a different team in the final interview loop to maintain a consistently high bar for talent.</li><li><strong>Practical Problem Solving:</strong> Use a take-home project or a pair-programming session that mirrors real-world work.</li></ul>` },
+                    'remote': { category: 'Hiring', title: 'Remote Transformation', company: 'GITLAB', content: '<h3>Key Idea</h3><p>Build a thriving, productive company with no physical offices.</p><ul><li>Document everything in a central handbook.</li><li>Promote asynchronous communication.</li><li>Invest in tools for remote collaboration.</li></ul>' },
+                    'seed-deck': { category: 'Fundraising', title: 'The Perfect Seed Deck', company: 'Y COMBINATOR', content: `<h3>The 10-Slide Structure</h3><ol><li>Title</li><li>Problem</li><li>Solution</li><li>Market Size</li><li>Product</li><li>Traction</li><li>Team</li><li>Competition</li><li>Business Model</li><li>The Ask</li></ol>` },
+                    'board-meeting': { category: 'Fundraising', title: 'Board Meeting Excellence', company: 'SPOTIFY', content: '<h3>Key Idea</h3><p>Structure board meetings around strategic decisions, not just updates.</p><ul><li>Send materials 48 hours in advance.</li><li>Focus 80% of time on forward-looking strategy.</li><li>Use a data-driven appendix for metrics.</li></ul>' },
+                    'product-docs': { category: 'Product', title: 'Writing Great Product Docs', company: 'INTERCOM', content: '<h3>Key Idea</h3><p>Structure product docs around the "Why, What, and How" to ensure clarity for the entire team.</p><ul><li><strong>Why:</strong> The problem you are solving and for whom.</li><li><strong>What:</strong> The scope of the feature, including user stories and success metrics.</li><li><strong>How:</strong> High-level technical approach and design mocks.</li></ul>' },
+                    'user-interviews': { category: 'Product', title: 'Effective User Interviews', company: 'STRIPE', content: '<h3>Key Idea</h3><p>Ask open-ended questions about past behavior, not future intentions. Focus on understanding their problems deeply rather than pitching your solution.</p>' },
+                    'enterprise-sales': { category: 'Sales', title: 'Enterprise Sales Playbook', company: 'SALESFORCE', content: '<h3>Key Idea</h3><p>Navigate complex sales cycles by mapping the organization, identifying the champion, economic buyer, and technical buyer, and building consensus across the buying committee.</p>' },
+                    'saas-pricing': { category: 'Sales', title: 'Value-Based SaaS Pricing', company: 'TWILIO', content: '<h3>Key Idea</h3><p>Price your product based on the value it delivers to the customer segment, not on your costs or competitor prices. Common models include per-user, usage-based, and tiered pricing.</p>' },
+                    'cap-table': { category: 'Legal', title: 'Cap Table Management', company: 'CARTA', content: '<h3>Key Idea</h3><p>Maintain a clean and accurate capitalization table from day one. It is the single source of truth for company ownership and is critical for fundraising and employee equity.</p>' },
+                    'nda': { category: 'Legal', title: 'When to Use an NDA', company: 'WILSON SONSINI', content: '<h3>Key Idea</h3><p>Use Non-Disclosure Agreements sparingly. They are standard for M&A or deep strategic partnerships, but create unnecessary friction when talking to most VCs or potential hires.</p>' },
+                    'board-meetings': { title: "Our Guide to Board Meetings", content: "<h3>The Atomic Ventures Board Meeting Framework</h3><p>The essential template and best practices for running an effective board meeting that drives decisions, not just reporting.</p><ol><li><strong>Pre-Meeting:</strong> Send a concise pre-read 72 hours in advance, highlighting key decisions needed.</li><li><strong>Meeting Structure:</strong> 10% review of past performance, 60% strategic discussion on 2-3 key topics, 30% open discussion and administrative.</li><li><strong>Post-Meeting:</strong> Send minutes and action items within 24 hours.</li></ol>" },
+                    'term-sheet': { title: "Term Sheet Negotiation 101", content: "<h3>Key Terms for Founders</h3><p>Key terms and strategies for a successful fundraise, focusing on founder-friendly outcomes.</p><ul><li><strong>Valuation:</strong> Understand pre-money vs. post-money.</li><li><strong>Liquidation Preference:</strong> Aim for 1x, non-participating.</li><li><strong>Board Composition:</strong> Ensure founder control or a balanced board.</li><li><strong>Vesting:</strong> Standard is 4-year vest with a 1-year cliff.</li></ul>" }
+                }
+            };
+
+            function loadReports() {
+                const savedReports = localStorage.getItem('operaltaReports');
+                if (savedReports) {
+                    db.reports = JSON.parse(savedReports);
+                } else {
+                    db.reports = {
+                        w36_2025: { id: 'w36_2025', title: 'Weekly Update - W36', date: 'Sep 5, 2025', status: 'Sent', metrics: { arr: '€1.2M', growth: '+23%', runway: '18mo' }, content: marked.parse('### Wins\n* Strong month with 23% MoM growth.\n* Closed 3 enterprise deals totaling €240k in new ARR.\n### Challenges\n* Engineering hiring remains top priority.') },
+                        w35_2025: { id: 'w35_2025', title: 'Weekly Update - W35', date: 'Aug 29, 2025', status: 'Sent', metrics: { arr: '€1.1M', growth: '+15%', runway: '19mo' }, content: marked.parse('### Wins\n* Onboarded 2 major enterprise clients: Globex Corp and Innovate LLC.\n* Successful launch of the new analytics dashboard.\n### Next Steps\n* Begin planning for Series A raise in Q1 2026.') },
+                        w34_2025: { id: 'w34_2025', title: 'Weekly Update - W34', date: 'Aug 22, 2025', status: 'Draft', metrics: { arr: '€1.05M', growth: '+5%', runway: '20mo' }, content: marked.parse('### Challenges\n* Unexpected churn from a mid-market customer.\n* Technical debt is slowing down feature development.') },
+                    };
+                }
+                renderReportsTable();
+            }
+
+            function saveReports() {
+                localStorage.setItem('operaltaReports', JSON.stringify(db.reports));
+            }
+
+            function addNewReport(reportData) {
+                const now = new Date();
+                const weekNumber = now.getWeek();
+                const reportId = `w${weekNumber}-${now.getTime()}`;
+
+                const newReport = {
+                    id: reportId,
+                    title: `Weekly Update - W${weekNumber}`,
+                    date: now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                    status: 'Draft',
+                    metrics: {
+                        arr: reportData.arr || 'N/A',
+                        growth: reportData.growth || 'N/A',
+                        runway: reportData.runway || 'N/A',
+                    },
+                    content: reportData.fullSummary ? marked.parse(reportData.fullSummary) : 'No summary available.'
+                };
+
+                db.reports[reportId] = newReport;
+                saveReports();
+                renderReportsTable();
+            }
+
+            function renderReportsTable() {
+                if (!ui.reportsTableBody) return;
+                ui.reportsTableBody.innerHTML = '';
+
+                if (Object.keys(db.reports).length === 0) {
+                     ui.reportsTableBody.innerHTML = `<tr><td colspan="5" class="text-center p-8 text-gray-500">No reports found.</td></tr>`;
+                     return;
+                }
+
+                const sortedReports = Object.values(db.reports).sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                sortedReports.forEach(report => {
+                    const statusClass = report.status === 'Sent' ? 'text-green-800 bg-green-100' : 'text-yellow-800 bg-yellow-100';
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="p-4">${report.date}</td>
+                        <td class="p-4 font-semibold">${report.title}</td>
+                        <td class="p-4"><span class="px-2 py-1 text-xs font-semibold ${statusClass} rounded-full">${report.status}</span></td>
+                        <td class="p-4 hidden md:table-cell">${report.metrics.growth || 'N/A'}</td>
+                        <td class="p-4 text-right"><a href="#" class="text-purple-700 hover:underline view-report-link" data-report-id="${report.id}">View</a></td>
+                    `;
+                    ui.reportsTableBody.appendChild(row);
+                });
+
+                document.querySelectorAll('.view-report-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        showViewReportModal(e.target.dataset.reportId);
+                    });
+                });
+            }
+
+            function showPage(pageName) {
+                const pageMap = {
+                    'dashboard': ui.pages.dashboard, 'recording': ui.pages.recording, 'reports': ui.pages.reports, 'playbooks': ui.pages.playbooks, 'integrations': ui.pages.integrations, 'settings': ui.pages.settings,
+                    'vc-dashboard': ui.pages.vcDashboard, 'vc-playbooks': ui.pages.vcPlaybooks, 'vc-settings': ui.pages.vcSettings,
+                };
+                Object.values(pageMap).forEach(page => page?.classList.add('hidden'));
+                pageMap[pageName]?.classList.remove('hidden');
+
+                const navMap = currentView === 'ceo' ? ui.navLinks.ceo : ui.navLinks.vc;
+                const navKey = pageName.replace('vc-', '');
+                Object.values(navMap).forEach(link => link?.classList.remove('active'));
+                navMap[navKey]?.classList.add('active');
+                
+                if (ui.sidebar.classList.contains('translate-x-0')) {
+                    ui.sidebar.classList.remove('translate-x-0');
+                    ui.sidebar.classList.add('-translate-x-full');
+                }
+            }
+            
+            function initializeDictationService(apiKey) {
+                dictationService = new DictationService({
+                    apiKey: apiKey, recordButton: ui.recordButton, statusTextElement: document.getElementById('recording-status-text'),
+                    onRecordingStart: () => ui.recordingInterface.classList.remove('hidden'),
+                    onRecordingStop: () => {
+                        showPage('recording'); ui.recordingInterface.classList.add('hidden'); ui.processingState.classList.remove('hidden'); ui.completedState.classList.add('hidden'); ui.processingStatus.textContent = 'Transcribing audio...';
+                    },
+                    onProcessingComplete: (data, rawText, error) => {
+                         latestGeneratedReport = { ...data, raw: rawText };
+                         renderCompletedState(latestGeneratedReport);
+                         ui.processingState.classList.add('hidden');
+                         ui.completedState.classList.remove('hidden');
+                    }
+                });
+                updateRecordButtonState();
+            }
+
+             function renderCompletedState(data) {
+                if (data.error) {
+                    ui.extractedIntelligenceContainer.innerHTML = `<h4 class="font-bold text-sm mb-4">Error</h4><div class="bg-white p-6 border border-red-200 rounded-lg"><p class="text-red-600">${data.error}</p></div>`;
+                    ui.strategicUpdateContainer.innerHTML = `<h4 class="font-bold text-sm mb-4">Strategic Update</h4><div class="bg-white border-2 border-gray-200 p-6 rounded-lg shadow-lg"><p class="text-gray-500">Could not be generated due to an error.</p></div>`;
+                    return;
+                }
+
+                const renderList = (items) => items && items.length > 0 ? `<ul>${items.map(item => `<li class="flex items-start gap-2"><span class="text-purple-600">→</span><span>${item}</span></li>`).join('')}</ul>` : '<p class="text-gray-500">None mentioned.</p>';
+                 const fullSummaryHtml = data.fullSummary ? marked.parse(data.fullSummary) : '<p class="text-gray-500">Summary not available.</p>';
+
+
+                const intelligenceHtml = `
+                    <div class="space-y-4">
+                        <div><h4 class="font-bold text-sm mb-2 text-green-600">Key Wins</h4>${renderList(data.wins)}</div>
+                        <div><h4 class="font-bold text-sm mb-2 text-amber-600">Key Challenges</h4>${renderList(data.challenges)}</div>
+                        <div><h4 class="font-bold text-sm mb-2 text-blue-600">Strategic Insights</h4>${renderList(data.insights)}</div>
+                        <div class="pt-4 border-t"><h4 class="font-bold text-sm mb-2">Full Transcript</h4><p class="text-xs italic text-gray-500 max-h-32 overflow-y-auto">${data.raw || 'Not available.'}</p></div>
+                    </div>`;
+                ui.extractedIntelligenceContainer.querySelector('.bg-white').innerHTML = intelligenceHtml;
+                
+                const strategicHtml = `
+                    <div class="flex items-center justify-between mb-6"><div><h3 class="font-bold text-xl">Strategic Update</h3><p class="text-sm text-gray-600 mono">Week ${new Date().getWeek()} • ${new Date().getFullYear()}</p></div><span class="text-sm bg-green-100 text-green-800 px-3 py-1 rounded-full">Momentum Building</span></div>
+                     <div class="grid grid-cols-3 gap-4 mb-6">
+                        <div class="text-center p-3 bg-gray-50 rounded"><p class="font-bold text-xl">${data.arr || 'N/A'}</p><p class="text-xs text-gray-600">ARR</p></div>
+                        <div class="text-center p-3 bg-gray-50 rounded"><p class="font-bold text-xl ${data.growth && data.growth.startsWith('+') ? 'text-green-600' : 'text-red-600'}">${data.growth || 'N/A'}</p><p class="text-xs text-gray-600">Growth</p></div>
+                        <div class="text-center p-3 bg-gray-50 rounded"><p class="font-bold text-xl">${data.runway || 'N/A'}</p><p class="text-xs text-gray-600">Runway</p></div>
+                    </div>
+                    <div class="prose prose-sm max-w-none">${fullSummaryHtml}</div>
+                    <button id="finalize-report-btn" class="mt-6 w-full bg-purple-700 text-white py-2 text-sm font-bold hover:bg-purple-800 transition-colors rounded-md">Save & Finalize Report →</button>
+                `;
+                ui.strategicUpdateContainer.querySelector('.bg-white').innerHTML = strategicHtml;
+                document.getElementById('finalize-report-btn').addEventListener('click', () => {
+                    addNewReport(latestGeneratedReport);
+                    showPage('reports');
+                });
+            }
+            
+            Date.prototype.getWeek = function() { var d = new Date(Date.UTC(this.getFullYear(), this.getMonth(), this.getDate())); var dayNum = d.getUTCDay() || 7; d.setUTCDate(d.getUTCDate() + 4 - dayNum); var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1)); return Math.ceil((((d - yearStart) / 86400000) + 1)/7) };
+            
+            function updateRecordButtonState() {
+                const isReady = dictationService && dictationService.isReady();
+                const buttons = [ui.startRecordingBtn, ui.recordButton, ui.newReportBtn];
+                buttons.forEach(btn => {
+                    if (btn) {
+                        btn.disabled = !isReady; btn.style.cursor = isReady ? 'pointer' : 'not-allowed'; btn.style.opacity = isReady ? '1' : '0.5'; btn.title = isReady ? 'Start Recording' : 'API Key not configured';
+                    }
+                });
+                ui.apiKeyBanner.classList.toggle('hidden', isReady);
+            }
+
+            function saveApiKey() {
+                const apiKey = ui.apiKeyInput.value.trim();
+                if(apiKey) {
+                    localStorage.setItem('geminiApiKey', apiKey);
+                    initializeDictationService(apiKey);
+                    ui.apiKeyStatus.textContent = 'API Key saved!';
+                     setTimeout(() => {
+                        ui.apiKeyStatus.textContent = '';
+                        if (dictationService.isReady()) showPage('dashboard');
+                    }, 2000);
+                }
+            }
+            
+            function switchView() {
+                const isVcView = ui.viewToggle.checked;
+                currentView = isVcView ? 'vc' : 'ceo';
+                ui.ceoView.classList.toggle('hidden', isVcView); ui.vcView.classList.toggle('hidden', !isVcView); ui.ceoNav.classList.toggle('hidden', isVcView); ui.vcNav.classList.toggle('hidden', !isVcView);
+                if (isVcView) {
+                    ui.userName.textContent = 'Sarah (Partner)'; ui.userCompany.textContent = 'Alpha Ventures'; ui.userAvatar.src = 'https://placehold.co/100x100/8B5CF6/FFFFFF?text=S';
+                    ui.vcLabel.classList.add('font-semibold', 'text-purple-700'); ui.vcLabel.classList.remove('text-gray-500'); ui.ceoLabel.classList.remove('font-semibold', 'text-purple-700'); ui.ceoLabel.classList.add('text-gray-500');
+                    showPage('vc-dashboard');
+                } else {
+                    ui.userName.textContent = 'Alex (CEO)'; ui.userCompany.textContent = 'Acme Inc.'; ui.userAvatar.src = 'https://placehold.co/100x100/5B21B6/FFFFFF?text=A';
+                    ui.ceoLabel.classList.add('font-semibold', 'text-purple-700'); ui.ceoLabel.classList.remove('text-gray-500'); ui.vcLabel.classList.remove('font-semibold', 'text-purple-700'); ui.vcLabel.classList.add('text-gray-500');
+                    showPage('dashboard');
+                }
+            }
+            
+            function showModal(title, body) {
+                ui.modalTitle.textContent = title;
+                ui.modalBody.innerHTML = '';
+                ui.modalBody.appendChild(body);
+                ui.modal.classList.remove('hidden');
+                setTimeout(() => { ui.modalOverlay.classList.remove('opacity-0'); ui.modalContent.classList.remove('scale-95', 'opacity-0'); }, 10);
+            }
+
+            function hideModal() {
+                ui.modalOverlay.classList.add('opacity-0');
+                ui.modalContent.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => ui.modal.classList.add('hidden'), 300);
+            }
+            
+            function showViewReportModal(reportId) {
+                const report = db.reports[reportId]; if (!report) return;
+                const content = document.createElement('div');
+                const growthClass = report.metrics.growth.startsWith('+') ? 'text-green-600' : 'text-red-600';
+                content.innerHTML = `
+                    <div class="grid grid-cols-3 gap-4 mb-6 text-center">
+                        <div><p class="font-bold text-2xl">${report.metrics.arr}</p><p class="text-xs text-gray-600">ARR</p></div>
+                        <div><p class="font-bold text-2xl ${growthClass}">${report.metrics.growth}</p><p class="text-xs text-gray-600">MoM Growth</p></div>
+                        <div><p class="font-bold text-2xl">${report.metrics.runway}</p><p class="text-xs text-gray-600">Runway</p></div>
+                    </div>
+                    <div class="prose prose-sm max-w-none">${report.content}</div>`;
+                showModal(report.title, content);
+            }
+            
+            // Other functions (populateCeoPlaybooks, populateVcPortfolio, etc.) are unchanged
+            // but are included here for completeness.
+
+            function populateCeoPlaybooks() {
+                const activeCategories = Array.from(ui.playbookCategoryFilters.querySelectorAll('.playbook-category-btn.active')).map(btn => btn.dataset.category);
+                const categories = { 'Growth': [], 'Hiring': [], 'Fundraising': [], 'Product': [], 'Sales': [], 'Legal': [] };
+                let visiblePlaybooks = Object.entries(db.playbooks).filter(([id, playbook]) => playbook.category && (activeCategories.length === 0 || activeCategories.includes(playbook.category)));
+
+                if (visiblePlaybooks.length === 0) {
+                    ui.ceoPlaybookList.innerHTML = `<div class="text-center text-gray-500 col-span-full">No playbooks found for the selected categories.</div>`;
+                    return;
+                }
+
+                visiblePlaybooks.forEach(([id, p]) => {
+                    const html = `
+                        <div class="bg-white border border-gray-200 p-4 rounded-lg flex justify-between items-center group">
+                            <div>
+                                <p class="font-semibold">${p.title}</p>
+                                <p class="text-sm text-gray-500">from ${p.company}</p>
+                            </div>
+                            <button class="playbook-view-btn text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded-full font-semibold hover:bg-gray-300" data-playbook-id="${id}">View</button>
+                        </div>`;
+                    if(categories[p.category]) categories[p.category].push(html);
+                });
+                
+                let fullHtml = '';
+                for (const [categoryName, items] of Object.entries(categories)) {
+                    if (items.length > 0) {
+                        fullHtml += `<div><h3 class="font-bold mb-4 pb-2 border-b border-gray-200">${categoryName}</h3><div class="space-y-4 text-sm">${items.join('')}</div></div>`;
+                    }
+                }
+                
+                ui.ceoPlaybookList.innerHTML = fullHtml;
+
+                document.querySelectorAll('#ceo-playbook-list .playbook-view-btn').forEach(link => {
+                    link.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); /* showPlaybookModal(e.currentTarget.dataset.playbookId); */ });
+                });
+            }
+
+            function populateVcPortfolio() {
+                let html = '';
+                for (const [id, company] of Object.entries(db.companies)) {
+                     const statusClass = company.status === 'On Track' ? 'text-green-800 bg-green-100' : 'text-yellow-800 bg-yellow-100';
+                     const growthClass = company.metrics.growth.startsWith('+') ? 'text-green-600' : 'text-red-600';
+                    html += `
+                        <div class="bg-white border border-gray-200 p-6 rounded-lg cursor-pointer hover:shadow-lg transition-shadow" data-company-id="${id}">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="font-bold">${company.name}</h3>
+                                <span class="px-2 py-1 text-xs font-semibold ${statusClass} rounded-full">${company.status}</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 text-center">
+                                <div class="border-r border-gray-200"><p class="text-lg font-bold">${company.metrics.arr}</p><p class="text-xs text-gray-500">ARR</p></div>
+                                <div class="border-r border-gray-200"><p class="text-lg font-bold ${growthClass}">${company.metrics.growth}</p><p class="text-xs text-gray-500">MoM</p></div>
+                                <div><p class="text-lg font-bold">${company.metrics.runway}</p><p class="text-xs text-gray-500">Runway</p></div>
+                            </div>
+                        </div>`;
+                }
+                ui.vcPortfolioList.innerHTML = html;
+                document.querySelectorAll('#vc-portfolio-list > div').forEach(card => card.addEventListener('click', (e) => { e.preventDefault(); /* showCompanyDetailModal(e.currentTarget.dataset.companyId); */ }));
+            }
+            
+            // Event Listeners Setup
+            Object.entries(ui.navLinks.ceo).forEach(([name, link]) => link?.addEventListener('click', (e) => { e.preventDefault(); showPage(name); }));
+            Object.entries(ui.navLinks.vc).forEach(([name, link]) => link?.addEventListener('click', (e) => { e.preventDefault(); showPage(`vc-${name}`); }));
+            
+            ui.bannerSettingsLink.addEventListener('click', (e) => { e.preventDefault(); showPage('settings'); });
+            ui.mobileMenuBtn.addEventListener('click', () => { ui.sidebar.classList.toggle('-translate-x-full'); });
+            ui.startRecordingBtn.addEventListener('click', () => dictationService?.toggleRecording());
+            if(ui.newReportBtn) ui.newReportBtn.addEventListener('click', () => showPage('dashboard'));
+            ui.saveApiKeyBtn.addEventListener('click', saveApiKey);
+            ui.viewToggle.addEventListener('change', switchView);
+
+            if(ui.authorPlaybookBtn) ui.authorPlaybookBtn.addEventListener('click', () => {});
+
+            document.querySelectorAll('#page-vc-playbooks .playbook-link').forEach(link => link.addEventListener('click', (e) => { e.preventDefault(); }));
+            
+            ui.modalCloseBtn.addEventListener('click', hideModal);
+            ui.modalOverlay.addEventListener('click', hideModal);
+            
+            ui.playbookCategoryFilters.addEventListener('click', (e) => {
+                const targetButton = e.target.closest('.playbook-category-btn');
+                if (targetButton) {
+                    targetButton.classList.toggle('active');
+                    populateCeoPlaybooks();
+                }
+            });
+
+            // Initial Load
+            const savedApiKey = localStorage.getItem('geminiApiKey');
+            if (savedApiKey) ui.apiKeyInput.value = savedApiKey;
+            initializeDictationService(savedApiKey);
+            loadReports();
+            populateCeoPlaybooks();
+            populateVcPortfolio();
+        });
+    </script>
+</body>
+</html>
