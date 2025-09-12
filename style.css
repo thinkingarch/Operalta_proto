@@ -1,161 +1,594 @@
-{\rtf1\ansi\ansicpg1252\cocoartf2822
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
-{\colortbl;\red255\green255\blue255;\red183\green111\blue247;\red23\green24\blue24;\red202\green202\blue202;
-\red194\green126\blue101;\red212\green212\blue212;\red113\green192\blue131;\red70\green137\blue204;\red140\green211\blue254;
-\red167\green197\blue152;\red109\green115\blue120;}
-{\*\expandedcolortbl;;\cssrgb\c77255\c54118\c97647;\cssrgb\c11765\c12157\c12549;\cssrgb\c83137\c83137\c83137;
-\cssrgb\c80784\c56863\c47059;\cssrgb\c86275\c86275\c86275;\cssrgb\c50588\c78824\c58431;\cssrgb\c33725\c61176\c83922;\cssrgb\c61176\c86275\c99608;
-\cssrgb\c70980\c80784\c65882;\cssrgb\c50196\c52549\c54510;}
-\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
-\deftab720
-\pard\pardeftab720\partightenfactor0
+import { GoogleGenAI } from "@google/genai";
+import { marked } from "marked";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-app.js";
+import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js";
 
-\f0\fs28 \cf2 \cb3 \expnd0\expndtw0\kerning0
-\outl0\strokewidth0 \strokec2 @import\cf4 \strokec4  \cf5 \strokec5 url\cf6 \strokec6 (\cf7 \strokec7 'https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap'\cf6 \strokec6 );\cf4 \cb1 \strokec4 \
-\
-\pard\pardeftab720\partightenfactor0
-\cf8 \cb3 \strokec8 :root\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3 \strokec4     \cf9 \strokec9 --grid-color:\cf4 \strokec4  #f0f0f0\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 --accent:\cf4 \strokec4  #5B21B6\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 --color-recording:\cf4 \strokec4  #ff3b30\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 --glass-bg:\cf4 \strokec4  \cf5 \strokec5 rgba(\cf10 \strokec10 255\cf6 \strokec6 ,\cf4 \strokec4  \cf10 \strokec10 255\cf6 \strokec6 ,\cf4 \strokec4  \cf10 \strokec10 255\cf6 \strokec6 ,\cf4 \strokec4  \cf10 \strokec10 0.65\cf5 \strokec5 )\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 --glass-border:\cf4 \strokec4  \cf5 \strokec5 rgba(\cf10 \strokec10 0\cf6 \strokec6 ,\cf4 \strokec4  \cf10 \strokec10 0\cf6 \strokec6 ,\cf4 \strokec4  \cf10 \strokec10 0\cf6 \strokec6 ,\cf4 \strokec4  \cf10 \strokec10 0.07\cf5 \strokec5 )\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 --glass-shadow:\cf4 \strokec4  \cf5 \strokec5 rgba(\cf10 \strokec10 0\cf6 \strokec6 ,\cf4 \strokec4  \cf10 \strokec10 0\cf6 \strokec6 ,\cf4 \strokec4  \cf10 \strokec10 0\cf6 \strokec6 ,\cf4 \strokec4  \cf10 \strokec10 0.05\cf5 \strokec5 )\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 --glass-recording-bg:\cf4 \strokec4  \cf5 \strokec5 rgba(\cf10 \strokec10 248\cf6 \strokec6 ,\cf4 \strokec4  \cf10 \strokec10 248\cf6 \strokec6 ,\cf4 \strokec4  \cf10 \strokec10 248\cf6 \strokec6 ,\cf4 \strokec4  \cf10 \strokec10 0.75\cf5 \strokec5 )\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 --glass-recording-border:\cf4 \strokec4  \cf5 \strokec5 rgba(\cf10 \strokec10 0\cf6 \strokec6 ,\cf4 \strokec4  \cf10 \strokec10 0\cf6 \strokec6 ,\cf4 \strokec4  \cf10 \strokec10 0\cf6 \strokec6 ,\cf4 \strokec4  \cf10 \strokec10 0.1\cf5 \strokec5 )\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf6 \cb3 \strokec6 \}\cf4 \cb1 \strokec4 \
-\
-\pard\pardeftab720\partightenfactor0
-\cf8 \cb3 \strokec8 body\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3 \strokec4     \cf9 \strokec9 font-family:\cf4 \strokec4  \cf7 \strokec7 'Space Grotesk'\cf6 \strokec6 ,\cf4 \strokec4  \cf5 \strokec5 -apple-system\cf6 \strokec6 ,\cf4 \strokec4  \cf5 \strokec5 sans-serif\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 background-color:\cf4 \strokec4  #f9fafb\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf6 \cb3 \strokec6 \}\cf4 \cb1 \strokec4 \
-\
-\pard\pardeftab720\partightenfactor0
-\cf8 \cb3 \strokec8 .mono\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3 \strokec4     \cf9 \strokec9 font-family:\cf4 \strokec4  \cf7 \strokec7 'Space Mono'\cf6 \strokec6 ,\cf4 \strokec4  \cf5 \strokec5 monospace\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf6 \cb3 \strokec6 \}\cf4 \cb1 \strokec4 \
-\
-\pard\pardeftab720\partightenfactor0
-\cf8 \cb3 \strokec8 .baseline-grid\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3 \strokec4     \cf9 \strokec9 background-image:\cf4 \strokec4  \cf5 \strokec5 linear-gradient(var(--grid-color)\cf4 \strokec4  \cf10 \strokec10 1px\cf6 \strokec6 ,\cf4 \strokec4  \cf5 \strokec5 transparent\cf4 \strokec4  \cf10 \strokec10 1px\cf5 \strokec5 )\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 background-size:\cf4 \strokec4  \cf10 \strokec10 100%\cf4 \strokec4  \cf10 \strokec10 16px\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf6 \cb3 \strokec6 \}\cf4 \cb1 \strokec4 \
-\
-\pard\pardeftab720\partightenfactor0
-\cf8 \cb3 \strokec8 .sidebar-link\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \strokec4  \cf9 \strokec9 transition:\cf4 \strokec4  \cf5 \strokec5 all\cf4 \strokec4  \cf10 \strokec10 0.2s\cf4 \strokec4  \cf5 \strokec5 ease\cf6 \strokec6 ;\cf4 \strokec4  \cf6 \strokec6 \}\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 .sidebar-link:hover\cf6 \strokec6 ,\cf4 \strokec4  \cf8 \strokec8 .sidebar-link.active\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \strokec4  \cf9 \strokec9 background-color:\cf4 \strokec4  #f3f4f6\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 color:\cf4 \strokec4  #111827\cf6 \strokec6 ;\cf4 \strokec4  \cf6 \strokec6 \}\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 .sidebar-link.active\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \strokec4  \cf9 \strokec9 font-weight:\cf4 \strokec4  \cf10 \strokec10 600\cf6 \strokec6 ;\cf4 \strokec4  \cf6 \strokec6 \}\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 #sidebar\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \strokec4  \cf9 \strokec9 transition:\cf4 \strokec4  \cf5 \strokec5 transform\cf4 \strokec4  \cf10 \strokec10 0.3s\cf4 \strokec4  \cf5 \strokec5 ease-in-out\cf6 \strokec6 ;\cf4 \strokec4  \cf6 \strokec6 \}\cf4 \cb1 \strokec4 \
-\
-\pard\pardeftab720\partightenfactor0
-\cf11 \cb3 \strokec11 /* CEO/VC Toggle Switch */\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf8 \cb3 \strokec8 .toggle-dot\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \strokec4  \cf9 \strokec9 transition:\cf4 \strokec4  \cf5 \strokec5 transform\cf4 \strokec4  \cf10 \strokec10 0.3s\cf4 \strokec4  \cf5 \strokec5 cubic-bezier(\cf10 \strokec10 0.175\cf6 \strokec6 ,\cf4 \strokec4  \cf10 \strokec10 0.885\cf6 \strokec6 ,\cf4 \strokec4  \cf10 \strokec10 0.32\cf6 \strokec6 ,\cf4 \strokec4  \cf10 \strokec10 1.275\cf5 \strokec5 )\cf6 \strokec6 ;\cf4 \strokec4  \cf6 \strokec6 \}\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 input:checked\cf4 \strokec4  ~ \cf8 \strokec8 .toggle-bg\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \strokec4  \cf9 \strokec9 background-color:\cf4 \strokec4  \cf5 \strokec5 var(--accent)\cf6 \strokec6 ;\cf4 \strokec4  \cf6 \strokec6 \}\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 input:checked\cf4 \strokec4  ~ \cf8 \strokec8 .toggle-dot\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \strokec4  \cf9 \strokec9 transform:\cf4 \strokec4  \cf5 \strokec5 translateX(\cf10 \strokec10 100%\cf5 \strokec5 )\cf6 \strokec6 ;\cf4 \strokec4  \cf6 \strokec6 \}\cf4 \cb1 \strokec4 \
-\
-\pard\pardeftab720\partightenfactor0
-\cf11 \cb3 \strokec11 /* Dictation App Styles Integration */\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf8 \cb3 \strokec8 .recording-interface\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3 \strokec4     \cf9 \strokec9 transition:\cf4 \strokec4  \cf5 \strokec5 all\cf4 \strokec4  \cf10 \strokec10 0.45s\cf4 \strokec4  \cf5 \strokec5 ease-in-out\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 z-index:\cf4 \strokec4  \cf10 \strokec10 10\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf6 \cb3 \strokec6 \}\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf8 \cb3 \strokec8 .recording-interface.is-live\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3 \strokec4     \cf9 \strokec9 position:\cf4 \strokec4  \cf5 \strokec5 fixed\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 bottom:\cf4 \strokec4  \cf10 \strokec10 0\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 left:\cf4 \strokec4  \cf10 \strokec10 0\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 right:\cf4 \strokec4  \cf10 \strokec10 0\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 height:\cf4 \strokec4  \cf10 \strokec10 350px\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 z-index:\cf4 \strokec4  \cf10 \strokec10 1000\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 background-color:\cf4 \strokec4  \cf5 \strokec5 var(--glass-recording-bg)\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 backdrop-filter:\cf4 \strokec4  \cf5 \strokec5 blur(\cf10 \strokec10 20px\cf5 \strokec5 )\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 -webkit-backdrop-filter:\cf4 \strokec4  \cf5 \strokec5 blur(\cf10 \strokec10 20px\cf5 \strokec5 )\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 border-top:\cf4 \strokec4  \cf10 \strokec10 1px\cf4 \strokec4  \cf5 \strokec5 solid\cf4 \strokec4  \cf5 \strokec5 var(--glass-recording-border)\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 box-shadow:\cf4 \strokec4  \cf10 \strokec10 0\cf4 \strokec4  \cf10 \strokec10 -4px\cf4 \strokec4  \cf10 \strokec10 20px\cf4 \strokec4  \cf5 \strokec5 var(--glass-shadow)\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 justify-content:\cf4 \strokec4  \cf5 \strokec5 flex-start\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 padding:\cf4 \strokec4  \cf10 \strokec10 20px\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf6 \cb3 \strokec6 \}\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf8 \cb3 \strokec8 .live-recording-title\cf6 \strokec6 ,\cf4 \strokec4  \cf8 \strokec8 #liveWaveformCanvas\cf6 \strokec6 ,\cf4 \strokec4  \cf8 \strokec8 .live-recording-timer\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3 \strokec4     \cf9 \strokec9 opacity:\cf4 \strokec4  \cf10 \strokec10 0\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 transform:\cf4 \strokec4  \cf5 \strokec5 translateY(\cf10 \strokec10 15px\cf5 \strokec5 )\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 transition:\cf4 \strokec4  \cf5 \strokec5 opacity\cf4 \strokec4  \cf10 \strokec10 0.3s\cf4 \strokec4  \cf5 \strokec5 ease-out\cf4 \strokec4  \cf10 \strokec10 0.1s\cf6 \strokec6 ,\cf4 \strokec4  \cf5 \strokec5 transform\cf4 \strokec4  \cf10 \strokec10 0.35s\cf4 \strokec4  \cf5 \strokec5 ease-out\cf4 \strokec4  \cf10 \strokec10 0.1s\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf6 \cb3 \strokec6 \}\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf8 \cb3 \strokec8 .recording-interface.is-live\cf4 \strokec4  \cf8 \strokec8 .live-recording-title\cf6 \strokec6 ,\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 .recording-interface.is-live\cf4 \strokec4  \cf8 \strokec8 #liveWaveformCanvas\cf6 \strokec6 ,\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 .recording-interface.is-live\cf4 \strokec4  \cf8 \strokec8 .live-recording-timer\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3 \strokec4     \cf9 \strokec9 opacity:\cf4 \strokec4  \cf10 \strokec10 1\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 transform:\cf4 \strokec4  \cf5 \strokec5 translateY(\cf10 \strokec10 0\cf5 \strokec5 )\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf6 \cb3 \strokec6 \}\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf8 \cb3 \strokec8 #liveWaveformCanvas\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \strokec4  \cf9 \strokec9 width:\cf4 \strokec4  \cf10 \strokec10 100%\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 max-width:\cf4 \strokec4  \cf10 \strokec10 340px\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 height:\cf4 \strokec4  \cf10 \strokec10 70px\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 margin-bottom:\cf4 \strokec4  \cf10 \strokec10 18px\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 border-radius:\cf4 \strokec4  \cf10 \strokec10 4px\cf6 \strokec6 ;\cf4 \strokec4  \cf6 \strokec6 \}\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 .live-recording-timer\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \strokec4  \cf9 \strokec9 font-family:\cf4 \strokec4  \cf5 \strokec5 var(--font-mono)\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 font-size:\cf4 \strokec4  \cf10 \strokec10 44px\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 font-weight:\cf4 \strokec4  \cf10 \strokec10 400\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 margin-bottom:\cf4 \strokec4  \cf10 \strokec10 22px\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 text-align:\cf4 \strokec4  \cf5 \strokec5 center\cf6 \strokec6 ;\cf4 \strokec4  \cf6 \strokec6 \}\cf4 \cb1 \strokec4 \
-\
-\cf8 \cb3 \strokec8 .record-button\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \strokec4  \cf9 \strokec9 position:\cf4 \strokec4  \cf5 \strokec5 relative\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 width:\cf4 \strokec4  \cf10 \strokec10 72px\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 height:\cf4 \strokec4  \cf10 \strokec10 72px\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 border-radius:\cf4 \strokec4  \cf10 \strokec10 50%\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 border:\cf4 \strokec4  \cf5 \strokec5 none\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 outline:\cf4 \strokec4  \cf5 \strokec5 none\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 background:\cf4 \strokec4  \cf5 \strokec5 none\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 cursor:\cf4 \strokec4  \cf5 \strokec5 pointer\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 z-index:\cf4 \strokec4  \cf10 \strokec10 1\cf6 \strokec6 ;\cf4 \strokec4  \cf6 \strokec6 \}\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 .record-button-inner\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \strokec4  \cf9 \strokec9 position:\cf4 \strokec4  \cf5 \strokec5 relative\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 width:\cf4 \strokec4  \cf10 \strokec10 100%\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 height:\cf4 \strokec4  \cf10 \strokec10 100%\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 border-radius:\cf4 \strokec4  \cf10 \strokec10 50%\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 background:\cf4 \strokec4  \cf5 \strokec5 var(--glass-bg)\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 border:\cf4 \strokec4  \cf10 \strokec10 1px\cf4 \strokec4  \cf5 \strokec5 solid\cf4 \strokec4  \cf5 \strokec5 var(--glass-border)\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 display:\cf4 \strokec4  \cf5 \strokec5 flex\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 align-items:\cf4 \strokec4  \cf5 \strokec5 center\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 justify-content:\cf4 \strokec4  \cf5 \strokec5 center\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 color:\cf4 \strokec4  #111827\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 font-size:\cf4 \strokec4  \cf10 \strokec10 24px\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 z-index:\cf4 \strokec4  \cf10 \strokec10 2\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 box-shadow:\cf4 \strokec4  \cf10 \strokec10 0\cf4 \strokec4  \cf10 \strokec10 2px\cf4 \strokec4  \cf10 \strokec10 8px\cf4 \strokec4  \cf5 \strokec5 rgba(\cf10 \strokec10 0\cf6 \strokec6 ,\cf10 \strokec10 0\cf6 \strokec6 ,\cf10 \strokec10 0\cf6 \strokec6 ,\cf10 \strokec10 0.1\cf5 \strokec5 )\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 transition:\cf4 \strokec4  \cf5 \strokec5 all\cf4 \strokec4  \cf10 \strokec10 0.3s\cf4 \strokec4  \cf5 \strokec5 ease\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 backdrop-filter:\cf4 \strokec4  \cf5 \strokec5 blur(\cf10 \strokec10 15px\cf5 \strokec5 )\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 -webkit-backdrop-filter:\cf4 \strokec4  \cf5 \strokec5 blur(\cf10 \strokec10 15px\cf5 \strokec5 )\cf6 \strokec6 ;\cf4 \strokec4  \cf6 \strokec6 \}\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 .record-button:hover\cf4 \strokec4  \cf8 \strokec8 .record-button-inner\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \strokec4  \cf9 \strokec9 transform:\cf4 \strokec4  \cf5 \strokec5 scale(\cf10 \strokec10 1.08\cf5 \strokec5 )\cf6 \strokec6 ;\cf4 \strokec4  \cf6 \strokec6 \}\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 .record-button.recording\cf4 \strokec4  \cf8 \strokec8 .record-button-inner\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \strokec4  \cf9 \strokec9 background-color:\cf4 \strokec4  \cf5 \strokec5 var(--color-recording)\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 border-color:\cf4 \strokec4  \cf5 \strokec5 transparent\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 color:\cf4 \strokec4  \cf5 \strokec5 white\cf6 \strokec6 ;\cf4 \strokec4  \cf6 \strokec6 \}\cf4 \cb1 \strokec4 \
-\
-\pard\pardeftab720\partightenfactor0
-\cf2 \cb3 \strokec2 @keyframes\cf4 \strokec4  \cf5 \strokec5 wave\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \strokec4  \cf10 \strokec10 0%\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \strokec4  \cf9 \strokec9 transform:\cf4 \strokec4  \cf5 \strokec5 scale(\cf10 \strokec10 0.4\cf5 \strokec5 )\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 opacity:\cf4 \strokec4  \cf10 \strokec10 0.8\cf6 \strokec6 ;\cf4 \strokec4  \cf6 \strokec6 \}\cf4 \strokec4  \cf10 \strokec10 100%\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \strokec4  \cf9 \strokec9 transform:\cf4 \strokec4  \cf5 \strokec5 scale(\cf10 \strokec10 1.8\cf5 \strokec5 )\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 opacity:\cf4 \strokec4  \cf10 \strokec10 0\cf6 \strokec6 ;\cf4 \strokec4  \cf6 \strokec6 \}\cf4 \strokec4  \cf6 \strokec6 \}\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf8 \cb3 \strokec8 .record-waves\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \strokec4  \cf9 \strokec9 position:\cf4 \strokec4  \cf5 \strokec5 absolute\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 top:\cf4 \strokec4  \cf10 \strokec10 50%\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 left:\cf4 \strokec4  \cf10 \strokec10 50%\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 transform:\cf4 \strokec4  \cf5 \strokec5 translate(\cf10 \strokec10 -50%\cf6 \strokec6 ,\cf4 \strokec4  \cf10 \strokec10 -50%\cf5 \strokec5 )\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 width:\cf4 \strokec4  \cf10 \strokec10 200px\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 height:\cf4 \strokec4  \cf10 \strokec10 200px\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 z-index:\cf4 \strokec4  \cf10 \strokec10 1\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 opacity:\cf4 \strokec4  \cf10 \strokec10 0\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 transition:\cf4 \strokec4  \cf5 \strokec5 opacity\cf4 \strokec4  \cf10 \strokec10 0.3s\cf4 \strokec4  \cf5 \strokec5 ease\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 pointer-events:\cf4 \strokec4  \cf5 \strokec5 none\cf6 \strokec6 ;\cf4 \strokec4  \cf6 \strokec6 \}\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 .record-button.recording\cf4 \strokec4  \cf8 \strokec8 .record-waves\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \strokec4  \cf9 \strokec9 opacity:\cf4 \strokec4  \cf10 \strokec10 1\cf6 \strokec6 ;\cf4 \strokec4  \cf6 \strokec6 \}\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 .wave\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \strokec4  \cf9 \strokec9 fill:\cf4 \strokec4  \cf5 \strokec5 none\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 stroke:\cf4 \strokec4  \cf5 \strokec5 var(--color-recording)\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 stroke-width:\cf4 \strokec4  \cf10 \strokec10 1.5px\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 opacity:\cf4 \strokec4  \cf10 \strokec10 0\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 transform-origin:\cf4 \strokec4  \cf5 \strokec5 center\cf6 \strokec6 ;\cf4 \strokec4  \cf6 \strokec6 \}\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 .record-button.recording\cf4 \strokec4  \cf8 \strokec8 .wave1\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \strokec4  \cf9 \strokec9 animation:\cf4 \strokec4  \cf5 \strokec5 wave\cf4 \strokec4  \cf10 \strokec10 2s\cf4 \strokec4  \cf5 \strokec5 infinite\cf4 \strokec4  \cf5 \strokec5 ease-out\cf6 \strokec6 ;\cf4 \strokec4  \cf6 \strokec6 \}\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 .record-button.recording\cf4 \strokec4  \cf8 \strokec8 .wave2\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \strokec4  \cf9 \strokec9 animation:\cf4 \strokec4  \cf5 \strokec5 wave\cf4 \strokec4  \cf10 \strokec10 2s\cf4 \strokec4  \cf5 \strokec5 infinite\cf4 \strokec4  \cf5 \strokec5 ease-out\cf4 \strokec4  \cf10 \strokec10 0.4s\cf6 \strokec6 ;\cf4 \strokec4  \cf6 \strokec6 \}\cf4 \cb1 \strokec4 \
-\
-\cf8 \cb3 \strokec8 .notion-block\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3 \strokec4     \cf9 \strokec9 border-left:\cf4 \strokec4  \cf10 \strokec10 3px\cf4 \strokec4  \cf5 \strokec5 solid\cf4 \strokec4  \cf5 \strokec5 var(--accent)\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 padding-left:\cf4 \strokec4  \cf10 \strokec10 1rem\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 margin-top:\cf4 \strokec4  \cf10 \strokec10 0.5rem\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf6 \cb3 \strokec6 \}\cf4 \cb1 \strokec4 \
-\
-\pard\pardeftab720\partightenfactor0
-\cf11 \cb3 \strokec11 /* Modal Styles */\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf8 \cb3 \strokec8 .modal-overlay\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3 \strokec4     \cf9 \strokec9 transition:\cf4 \strokec4  \cf5 \strokec5 opacity\cf4 \strokec4  \cf10 \strokec10 0.3s\cf4 \strokec4  \cf5 \strokec5 ease\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf6 \cb3 \strokec6 \}\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf8 \cb3 \strokec8 .modal-content\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3 \strokec4     \cf9 \strokec9 transition:\cf4 \strokec4  \cf5 \strokec5 transform\cf4 \strokec4  \cf10 \strokec10 0.3s\cf4 \strokec4  \cf5 \strokec5 ease\cf6 \strokec6 ,\cf4 \strokec4  \cf5 \strokec5 opacity\cf4 \strokec4  \cf10 \strokec10 0.3s\cf4 \strokec4  \cf5 \strokec5 ease\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf6 \cb3 \strokec6 \}\cf4 \cb1 \strokec4 \
-\
-\pard\pardeftab720\partightenfactor0
-\cf11 \cb3 \strokec11 /* Playbook Category Filter */\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf8 \cb3 \strokec8 .playbook-category-btn\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \strokec4  \cf9 \strokec9 transition:\cf4 \strokec4  \cf5 \strokec5 all\cf4 \strokec4  \cf10 \strokec10 0.2s\cf4 \strokec4  \cf5 \strokec5 ease\cf6 \strokec6 ;\cf4 \strokec4  \cf9 \strokec9 border:\cf4 \strokec4  \cf10 \strokec10 1px\cf4 \strokec4  \cf5 \strokec5 solid\cf4 \strokec4  #e5e7eb\cf6 \strokec6 ;\cf4 \strokec4  \cf6 \strokec6 \}\cf4 \cb1 \strokec4 \
-\cf8 \cb3 \strokec8 .playbook-category-btn.active\cf6 \strokec6 ,\cf4 \strokec4  \cf8 \strokec8 .playbook-category-btn:hover\cf4 \strokec4  \cf6 \strokec6 \{\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf4 \cb3 \strokec4     \cf9 \strokec9 background-color:\cf4 \strokec4  \cf5 \strokec5 var(--accent)\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 color:\cf4 \strokec4  \cf5 \strokec5 white\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\cf4 \cb3 \strokec4     \cf9 \strokec9 border-color:\cf4 \strokec4  \cf5 \strokec5 var(--accent)\cf6 \strokec6 ;\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\partightenfactor0
-\cf6 \cb3 \strokec6 \}\cf4 \cb1 \strokec4 \
-\
+// --- Firebase Configuration ---
+// IMPORTANT: Replace this with your project's configuration object from the Firebase Console
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+// --- End of Firebase Configuration ---
+
+
+const MODEL_NAME = 'gemini-1.5-flash';
+
+class DictationService {
+    constructor(options) {
+        this.genAI = null;
+        this.apiKey = options.apiKey;
+        this.jsonModel = null;
+        this.textModel = null;
+        
+        if (this.apiKey) {
+            try {
+                this.genAI = new GoogleGenAI(this.apiKey);
+                this.textModel = this.genAI.getGenerativeModel({ model: MODEL_NAME });
+                this.jsonModel = this.genAI.getGenerativeModel({
+                    model: MODEL_NAME,
+                    generationConfig: { responseMimeType: "application/json" },
+                });
+            } catch (e) {
+                console.error("Failed to initialize GoogleGenAI:", e);
+            }
+        }
+        
+        this.recordButton = options.recordButton;
+        this.statusTextElement = options.statusTextElement;
+        this.onProcessingComplete = options.onProcessingComplete;
+        this.onRecordingStart = options.onRecordingStart;
+        this.onRecordingStop = options.onRecordingStop;
+        
+        this.liveWaveformCanvas = document.getElementById('liveWaveformCanvas');
+        this.liveRecordingTimerDisplay = document.getElementById('liveRecordingTimerDisplay');
+        this.recordingInterface = document.getElementById('recording-interface');
+        this.liveRecordingTitle = document.getElementById('liveRecordingTitle');
+
+        if (this.liveWaveformCanvas) {
+            this.liveWaveformCtx = this.liveWaveformCanvas.getContext('2d');
+        }
+        
+        this.audioChunks = [];
+        this.isRecording = false;
+        this.mediaRecorder = null;
+        this.stream = null;
+        this.audioContext = null;
+
+        this.bindEventListeners();
+    }
+    
+    isReady() {
+        return this.genAI !== null && this.jsonModel !== null && this.textModel !== null;
+    }
+
+    bindEventListeners() {
+        this.recordButton.addEventListener('click', () => this.toggleRecording());
+        window.addEventListener('resize', () => this.handleResize());
+    }
+    
+    handleResize() { if (this.isRecording) requestAnimationFrame(() => this.setupCanvasDimensions()); }
+
+    setupCanvasDimensions() {
+        if (!this.liveWaveformCanvas || !this.liveWaveformCtx) return;
+        const canvas = this.liveWaveformCanvas;
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        this.liveWaveformCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    async toggleRecording() {
+        if (!this.isReady()) {
+            console.error("Dictation service not ready. API Key might be missing or invalid.");
+            this.statusTextElement.textContent = 'API Key invalid.';
+            this.statusTextElement.style.color = 'red';
+            return;
+        }
+        this.isRecording ? await this.stopRecording() : await this.startRecording();
+    }
+    
+    async startRecording() {
+        try {
+            this.audioChunks = [];
+            this.statusTextElement.textContent = 'Requesting microphone...';
+            this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            
+            this.mediaRecorder = new MediaRecorder(this.stream);
+            this.mediaRecorder.ondataavailable = e => { if (e.data.size > 0) this.audioChunks.push(e.data) };
+            this.mediaRecorder.onstop = () => {
+                if (this.onRecordingStop) this.onRecordingStop();
+                this.stopLiveDisplay();
+                if (this.audioChunks.length > 0) {
+                    const audioBlob = new Blob(this.audioChunks, { type: this.mediaRecorder?.mimeType || 'audio/webm' });
+                    this.processAudio(audioBlob);
+                }
+                if (this.stream) this.stream.getTracks().forEach(track => track.stop());
+            };
+
+            this.mediaRecorder.start();
+            this.isRecording = true;
+            this.recordButton.classList.add('recording');
+            this.recordButton.title = 'Stop Recording';
+            this.startLiveDisplay();
+            if(this.onRecordingStart) this.onRecordingStart();
+
+        } catch (error) {
+            console.error("Error starting recording:", error);
+            this.statusTextElement.textContent = 'Microphone access denied.';
+        }
+    }
+    
+    async stopRecording() {
+        if (this.mediaRecorder && this.isRecording) {
+            this.mediaRecorder.stop();
+            this.isRecording = false;
+            this.recordButton.classList.remove('recording');
+            this.recordButton.title = 'Start Recording';
+            this.statusTextElement.textContent = 'Processing...';
+        }
+    }
+    
+    startLiveDisplay() {
+        this.recordingInterface.classList.add('is-live');
+        ['liveRecordingTitle', 'liveWaveformCanvas', 'liveRecordingTimerDisplay'].forEach(id => document.getElementById(id)?.classList.remove('hidden'));
+        this.setupCanvasDimensions();
+        const icon = this.recordButton.querySelector('i');
+        if(icon) { icon.classList.remove('fa-microphone'); icon.classList.add('fa-stop'); }
+        this.setupAudioVisualizer();
+        this.drawLiveWaveform();
+        this.recordingStartTime = Date.now();
+        if (this.timerIntervalId) clearInterval(this.timerIntervalId);
+        this.timerIntervalId = setInterval(() => this.updateLiveTimer(), 50);
+    }
+
+    stopLiveDisplay() {
+         this.recordingInterface.classList.remove('is-live');
+         setTimeout(() => this.recordingInterface.classList.add('hidden'), 500);
+        ['liveRecordingTitle', 'liveWaveformCanvas', 'liveRecordingTimerDisplay'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
+        const icon = this.recordButton.querySelector('i');
+        if(icon) { icon.classList.remove('fa-stop'); icon.classList.add('fa-microphone'); }
+        if (this.waveformDrawingId) cancelAnimationFrame(this.waveformDrawingId);
+        if (this.timerIntervalId) clearInterval(this.timerIntervalId);
+        if (this.audioContext && this.audioContext.state !== 'closed') this.audioContext.close();
+        this.audioContext = null;
+    }
+
+    setupAudioVisualizer() {
+        if (!this.stream) return;
+        this.audioContext = new AudioContext();
+        const source = this.audioContext.createMediaStreamSource(this.stream);
+        this.analyserNode = this.audioContext.createAnalyser();
+        this.analyserNode.fftSize = 256;
+        this.waveformDataArray = new Uint8Array(this.analyserNode.frequencyBinCount);
+        source.connect(this.analyserNode);
+    }
+
+    drawLiveWaveform() {
+        if (!this.isRecording) return;
+        requestAnimationFrame(() => this.drawLiveWaveform());
+        if (!this.analyserNode) return;
+        this.analyserNode.getByteFrequencyData(this.waveformDataArray);
+        const ctx = this.liveWaveformCtx, canvas = this.liveWaveformCanvas;
+        if(!ctx || !canvas) return;
+        ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+        const numBars = this.waveformDataArray.length * 0.5;
+        const barWidth = canvas.clientWidth / numBars * 0.7;
+        let x = 0;
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--color-recording').trim();
+        for (let i = 0; i < numBars; i++) {
+            const barHeight = (this.waveformDataArray[i] / 255) * canvas.clientHeight;
+            ctx.fillRect(x, (canvas.clientHeight - barHeight) / 2, barWidth, barHeight);
+            x += barWidth * 1.3;
+        }
+    }
+    
+    updateLiveTimer() {
+        const elapsedMs = Date.now() - this.recordingStartTime;
+        const minutes = Math.floor(elapsedMs / 60000);
+        const seconds = Math.floor((elapsedMs % 60000) / 1000);
+        const hundredths = Math.floor((elapsedMs % 1000) / 10);
+        this.liveRecordingTimerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(hundredths).padStart(2, '0')}`;
+    }
+
+    async processAudio(audioBlob) {
+        const base64Audio = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = reject;
+            reader.readAsDataURL(audioBlob);
+        });
+
+        const audioPart = {
+            inlineData: {
+                mimeType: audioBlob.type,
+                data: base64Audio
+            }
+        };
+        
+        await this.getTranscription(audioPart);
+    }
+
+    async getTranscription(audioPart) {
+        try {
+            const prompt = 'Please provide a verbatim transcript of this audio recording.';
+            const result = await this.textModel.generateContent([prompt, audioPart]);
+            const transcription = result.response.text();
+            this.getPolishedNote(transcription);
+        } catch (error) { 
+            console.error("Error during transcription:", error);
+            this.onProcessingComplete(null, null, { error: `Transcription failed: ${error.message}` }); 
+        }
+    }
+
+    async getPolishedNote(rawTranscription) {
+         try {
+            if (!rawTranscription.trim()) { 
+                this.onProcessingComplete(null, rawTranscription, { arr: 'N/A', growth: 'N/A', runway: 'N/A' });
+                return;
+            }
+            
+            const prompt = `Analyze the following raw transcript of a CEO's weekly update and extract key information. Here is the transcript: --- ${rawTranscription} ---`;
+
+            const result = await this.jsonModel.generateContent(prompt);
+            const responseText = result.response.text();
+            const data = JSON.parse(responseText);
+            this.onProcessingComplete(data, rawTranscription, null);
+
+        } catch (error) { 
+            console.error("Error during polishing:", error);
+            this.onProcessingComplete(null, rawTranscription, { error: `AI analysis failed: ${error.message}` });
+        }
+    }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    let dictationService = null;
+    let currentView = 'ceo';
+    let latestGeneratedReport = {};
+    let activePlaybookCategories = [];
+    let reportsData = {};
+    let playbooksData = {};
+
+    const ui = {
+        sidebar: document.getElementById('sidebar'),
+        mobileMenuBtn: document.getElementById('mobile-menu-btn'),
+        ceoView: document.getElementById('ceo-view'),
+        vcView: document.getElementById('vc-view'),
+        ceoNav: document.getElementById('ceo-nav'),
+        vcNav: document.getElementById('vc-nav'),
+        ceoPlaybookList: document.getElementById('ceo-playbook-list'),
+        playbookCategoryFilters: document.getElementById('playbook-category-filters'),
+        vcPortfolioList: document.getElementById('vc-portfolio-list'),
+        reportsTableBody: document.querySelector('#page-reports tbody'),
+
+        pages: {
+             dashboard: document.getElementById('page-dashboard'), recording: document.getElementById('page-recording'), reports: document.getElementById('page-reports'), playbooks: document.getElementById('page-playbooks'), integrations: document.getElementById('page-integrations'), settings: document.getElementById('page-settings'),
+             vcDashboard: document.getElementById('page-vc-dashboard'), vcPlaybooks: document.getElementById('page-vc-playbooks'), vcSettings: document.getElementById('page-vc-settings'),
+        },
+        navLinks: { 
+            ceo: { dashboard: document.getElementById('nav-dashboard'), reports: document.getElementById('nav-reports'), playbooks: document.getElementById('nav-playbooks'), integrations: document.getElementById('nav-integrations'), settings: document.getElementById('nav-settings') },
+            vc: { dashboard: document.getElementById('nav-vc-dashboard'), playbooks: document.getElementById('nav-vc-playbooks'), settings: document.getElementById('nav-vc-settings'), }
+        },
+        startRecordingBtn: document.getElementById('start-recording-btn'), newReportBtn: document.getElementById('new-report-btn'), recordButton: document.getElementById('recordButton'),
+        recordingInterface: document.getElementById('recording-interface'), processingState: document.getElementById('processing-state'), processingStatus: document.getElementById('processing-status'), completedState: document.getElementById('completed-state'),
+        
+        extractedIntelligenceContainer: document.getElementById('extracted-intelligence'),
+        strategicUpdateContainer: document.getElementById('strategic-update'),
+
+        authorPlaybookBtn: document.getElementById('author-playbook-btn'),
+
+        apiKeyBanner: document.getElementById('api-key-banner'), bannerSettingsLink: document.getElementById('banner-settings-link'), apiKeyInput: document.getElementById('api-key-input'),
+        saveApiKeyBtn: document.getElementById('save-api-key-btn'), apiKeyStatus: document.getElementById('api-key-status'),
+        viewToggle: document.getElementById('view-toggle'), userName: document.getElementById('user-name'), userCompany: document.getElementById('user-company'), userAvatar: document.getElementById('user-avatar'),
+        ceoLabel: document.getElementById('ceo-label'), vcLabel: document.getElementById('vc-label'),
+
+        modal: document.getElementById('modal'), modalOverlay: document.getElementById('modal-overlay'), modalContent: document.getElementById('modal-content'),
+        modalTitle: document.getElementById('modal-title'), modalBody: document.getElementById('modal-body'), modalCloseBtn: document.getElementById('modal-close-btn'),
+    };
+
+    async function loadReports() {
+        const querySnapshot = await getDocs(collection(db, "reports"));
+        reportsData = {};
+        querySnapshot.forEach((doc) => {
+            reportsData[doc.id] = { id: doc.id, ...doc.data() };
+        });
+        renderReportsTable();
+    }
+
+    async function loadPlaybooks() {
+        const querySnapshot = await getDocs(collection(db, "playbooks"));
+        playbooksData = {};
+        querySnapshot.forEach((doc) => {
+            playbooksData[doc.id] = { id: doc.id, ...doc.data() };
+        });
+        populateCeoPlaybooks();
+    }
+    
+    async function addNewReport(reportData) {
+        const now = new Date();
+        const weekNumber = now.getWeek();
+        
+        const newReport = {
+            title: `Weekly Update - W${weekNumber}`,
+            date: now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+            status: 'Draft',
+            metrics: {
+                arr: reportData.arr || 'N/A',
+                growth: reportData.growth || 'N/A',
+                runway: reportData.runway || 'N/A',
+            },
+            content: reportData.fullSummary ? marked.parse(reportData.fullSummary) : 'No summary available.'
+        };
+        
+        const docRef = await addDoc(collection(db, "reports"), newReport);
+        reportsData[docRef.id] = { id: docRef.id, ...newReport };
+        renderReportsTable();
+    }
+
+    function renderReportsTable() {
+        if (!ui.reportsTableBody) return;
+        ui.reportsTableBody.innerHTML = '';
+
+        if (Object.keys(reportsData).length === 0) {
+             ui.reportsTableBody.innerHTML = `<tr><td colspan="5" class="text-center p-8 text-gray-500">No reports found in the database.</td></tr>`;
+             return;
+        }
+
+        const sortedReports = Object.values(reportsData).sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        sortedReports.forEach(report => {
+            const statusClass = report.status === 'Sent' ? 'text-green-800 bg-green-100' : 'text-yellow-800 bg-yellow-100';
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="p-4">${report.date}</td>
+                <td class="p-4 font-semibold">${report.title}</td>
+                <td class="p-4"><span class="px-2 py-1 text-xs font-semibold ${statusClass} rounded-full">${report.status}</span></td>
+                <td class="p-4 hidden md:table-cell">${report.metrics.growth || 'N/A'}</td>
+                <td class="p-4 text-right"><a href="#" class="text-purple-700 hover:underline view-report-link" data-report-id="${report.id}">View</a></td>
+            `;
+            ui.reportsTableBody.appendChild(row);
+        });
+
+        document.querySelectorAll('.view-report-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                showViewReportModal(e.target.dataset.reportId);
+            });
+        });
+    }
+
+    function showPage(pageName) {
+        const pageMap = {
+            'dashboard': ui.pages.dashboard, 'recording': ui.pages.recording, 'reports': ui.pages.reports, 'playbooks': ui.pages.playbooks, 'integrations': ui.pages.integrations, 'settings': ui.pages.settings,
+            'vc-dashboard': ui.pages.vcDashboard, 'vc-playbooks': ui.pages.vcPlaybooks, 'vc-settings': ui.pages.vcSettings,
+        };
+        Object.values(pageMap).forEach(page => page?.classList.add('hidden'));
+        pageMap[pageName]?.classList.remove('hidden');
+
+        const navMap = currentView === 'ceo' ? ui.navLinks.ceo : ui.navLinks.vc;
+        const navKey = pageName.replace('vc-', '');
+        Object.values(navMap).forEach(link => link?.classList.remove('active'));
+        navMap[navKey]?.classList.add('active');
+        
+        if (ui.sidebar.classList.contains('translate-x-0')) {
+            ui.sidebar.classList.remove('translate-x-0');
+            ui.sidebar.classList.add('-translate-x-full');
+        }
+    }
+    
+    function initializeDictationService(apiKey) {
+        dictationService = new DictationService({
+            apiKey: apiKey, recordButton: ui.recordButton, statusTextElement: document.getElementById('recording-status-text'),
+            onRecordingStart: () => ui.recordingInterface.classList.remove('hidden'),
+            onRecordingStop: () => {
+                showPage('recording'); ui.recordingInterface.classList.add('hidden'); ui.processingState.classList.remove('hidden'); ui.completedState.classList.add('hidden'); ui.processingStatus.textContent = 'Transcribing audio...';
+            },
+            onProcessingComplete: (data, rawText, error) => {
+                 latestGeneratedReport = { ...data, raw: rawText };
+                 renderCompletedState(latestGeneratedReport);
+                 ui.processingState.classList.add('hidden');
+                 ui.completedState.classList.remove('hidden');
+            }
+        });
+        updateRecordButtonState();
+    }
+
+     function renderCompletedState(data) {
+        if (data.error) {
+            ui.extractedIntelligenceContainer.innerHTML = `<h4 class="font-bold text-sm mb-4">Error</h4><div class="bg-white p-6 border border-red-200 rounded-lg"><p class="text-red-600">${data.error}</p></div>`;
+            ui.strategicUpdateContainer.innerHTML = `<h4 class="font-bold text-sm mb-4">Strategic Update</h4><div class="bg-white border-2 border-gray-200 p-6 rounded-lg shadow-lg"><p class="text-gray-500">Could not be generated due to an error.</p></div>`;
+            return;
+        }
+
+        const renderList = (items) => items && items.length > 0 ? `<ul>${items.map(item => `<li class="flex items-start gap-2"><span class="text-purple-600">→</span><span>${item}</span></li>`).join('')}</ul>` : '<p class="text-gray-500">None mentioned.</p>';
+         const fullSummaryHtml = data.fullSummary ? marked.parse(data.fullSummary) : '<p class="text-gray-500">Summary not available.</p>';
+
+
+        const intelligenceHtml = `
+            <div class="space-y-4">
+                <div><h4 class="font-bold text-sm mb-2 text-green-600">Key Wins</h4>${renderList(data.wins)}</div>
+                <div><h4 class="font-bold text-sm mb-2 text-amber-600">Key Challenges</h4>${renderList(data.challenges)}</div>
+                <div><h4 class="font-bold text-sm mb-2 text-blue-600">Strategic Insights</h4>${renderList(data.insights)}</div>
+                <div class="pt-4 border-t"><h4 class="font-bold text-sm mb-2">Full Transcript</h4><p class="text-xs italic text-gray-500 max-h-32 overflow-y-auto">${data.raw || 'Not available.'}</p></div>
+            </div>`;
+        ui.extractedIntelligenceContainer.querySelector('.bg-white').innerHTML = intelligenceHtml;
+        
+        const strategicHtml = `
+            <div class="flex items-center justify-between mb-6"><div><h3 class="font-bold text-xl">Strategic Update</h3><p class="text-sm text-gray-600 mono">Week ${new Date().getWeek()} • ${new Date().getFullYear()}</p></div><span class="text-sm bg-green-100 text-green-800 px-3 py-1 rounded-full">Momentum Building</span></div>
+             <div class="grid grid-cols-3 gap-4 mb-6">
+                <div class="text-center p-3 bg-gray-50 rounded"><p class="font-bold text-xl">${data.arr || 'N/A'}</p><p class="text-xs text-gray-600">ARR</p></div>
+                <div class="text-center p-3 bg-gray-50 rounded"><p class="font-bold text-xl ${data.growth && data.growth.startsWith('+') ? 'text-green-600' : 'text-red-600'}">${data.growth || 'N/A'}</p><p class="text-xs text-gray-600">Growth</p></div>
+                <div class="text-center p-3 bg-gray-50 rounded"><p class="font-bold text-xl">${data.runway || 'N/A'}</p><p class="text-xs text-gray-600">Runway</p></div>
+            </div>
+            <div class="prose prose-sm max-w-none">${fullSummaryHtml}</div>
+            <button id="finalize-report-btn" class="mt-6 w-full bg-purple-700 text-white py-2 text-sm font-bold hover:bg-purple-800 transition-colors rounded-md">Save Report to Database →</button>
+        `;
+        ui.strategicUpdateContainer.querySelector('.bg-white').innerHTML = strategicHtml;
+        document.getElementById('finalize-report-btn').addEventListener('click', () => {
+            addNewReport(latestGeneratedReport);
+            showPage('reports');
+        });
+    }
+    
+    Date.prototype.getWeek = function() { var d = new Date(Date.UTC(this.getFullYear(), this.getMonth(), this.getDate())); var dayNum = d.getUTCDay() || 7; d.setUTCDate(d.getUTCDate() + 4 - dayNum); var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1)); return Math.ceil((((d - yearStart) / 86400000) + 1)/7) };
+    
+    function updateRecordButtonState() {
+        const isReady = dictationService && dictationService.isReady();
+        const buttons = [ui.startRecordingBtn, ui.recordButton, ui.newReportBtn];
+        buttons.forEach(btn => {
+            if (btn) {
+                btn.disabled = !isReady; btn.style.cursor = isReady ? 'pointer' : 'not-allowed'; btn.style.opacity = isReady ? '1' : '0.5'; btn.title = isReady ? 'Start Recording' : 'API Key not configured';
+            }
+        });
+        ui.apiKeyBanner.classList.toggle('hidden', isReady);
+    }
+
+    function saveApiKey() {
+        const apiKey = ui.apiKeyInput.value.trim();
+        if(apiKey) {
+            localStorage.setItem('geminiApiKey', apiKey);
+            initializeDictationService(apiKey);
+            ui.apiKeyStatus.textContent = 'API Key saved!';
+             setTimeout(() => {
+                ui.apiKeyStatus.textContent = '';
+                if (dictationService.isReady()) showPage('dashboard');
+            }, 2000);
+        }
+    }
+    
+    function switchView() {
+        const isVcView = ui.viewToggle.checked;
+        currentView = isVcView ? 'vc' : 'ceo';
+        ui.ceoView.classList.toggle('hidden', isVcView); ui.vcView.classList.toggle('hidden', !isVcView); ui.ceoNav.classList.toggle('hidden', isVcView); ui.vcNav.classList.toggle('hidden', !isVcView);
+        if (isVcView) {
+            ui.userName.textContent = 'Sarah (Partner)'; ui.userCompany.textContent = 'Alpha Ventures'; ui.userAvatar.src = 'https://placehold.co/100x100/8B5CF6/FFFFFF?text=S';
+            ui.vcLabel.classList.add('font-semibold', 'text-purple-700'); ui.vcLabel.classList.remove('text-gray-500'); ui.ceoLabel.classList.remove('font-semibold', 'text-purple-700'); ui.ceoLabel.classList.add('text-gray-500');
+            showPage('vc-dashboard');
+        } else {
+            ui.userName.textContent = 'Alex (CEO)'; ui.userCompany.textContent = 'Acme Inc.'; ui.userAvatar.src = 'https://placehold.co/100x100/5B21B6/FFFFFF?text=A';
+            ui.ceoLabel.classList.add('font-semibold', 'text-purple-700'); ui.ceoLabel.classList.remove('text-gray-500'); ui.vcLabel.classList.remove('font-semibold', 'text-purple-700'); ui.vcLabel.classList.add('text-gray-500');
+            showPage('dashboard');
+        }
+    }
+    
+    function showModal(title, body) {
+        ui.modalTitle.textContent = title;
+        ui.modalBody.innerHTML = '';
+        ui.modalBody.appendChild(body);
+        ui.modal.classList.remove('hidden');
+        setTimeout(() => { ui.modalOverlay.classList.remove('opacity-0'); ui.modalContent.classList.remove('scale-95', 'opacity-0'); }, 10);
+    }
+
+    function hideModal() {
+        ui.modalOverlay.classList.add('opacity-0');
+        ui.modalContent.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => ui.modal.classList.add('hidden'), 300);
+    }
+    
+    function showViewReportModal(reportId) {
+        const report = reportsData[reportId]; if (!report) return;
+        const content = document.createElement('div');
+        const growthClass = report.metrics.growth.startsWith('+') ? 'text-green-600' : 'text-red-600';
+        content.innerHTML = `
+            <div class="grid grid-cols-3 gap-4 mb-6 text-center">
+                <div><p class="font-bold text-2xl">${report.metrics.arr}</p><p class="text-xs text-gray-600">ARR</p></div>
+                <div><p class="font-bold text-2xl ${growthClass}">${report.metrics.growth}</p><p class="text-xs text-gray-600">MoM Growth</p></div>
+                <div><p class="font-bold text-2xl">${report.metrics.runway}</p><p class="text-xs text-gray-600">Runway</p></div>
+            </div>
+            <div class="prose prose-sm max-w-none">${report.content}</div>`;
+        showModal(report.title, content);
+    }
+    
+    function populateCeoPlaybooks() {
+        const activeCategories = Array.from(ui.playbookCategoryFilters.querySelectorAll('.playbook-category-btn.active')).map(btn => btn.dataset.category);
+        const categories = { 'Growth': [], 'Hiring': [], 'Fundraising': [], 'Product': [], 'Sales': [], 'Legal': [] };
+        let visiblePlaybooks = Object.values(playbooksData).filter(playbook => playbook.category && (activeCategories.length === 0 || activeCategories.includes(playbook.category)));
+
+        if (visiblePlaybooks.length === 0 && Object.keys(playbooksData).length > 0) {
+            ui.ceoPlaybookList.innerHTML = `<div class="text-center text-gray-500 col-span-full">No playbooks found for the selected categories.</div>`;
+            return;
+        }
+        
+        if(Object.keys(playbooksData).length === 0){
+             ui.ceoPlaybookList.innerHTML = `<div class="text-center text-gray-500 col-span-full">Loading playbooks...</div>`;
+            return;
+        }
+
+        visiblePlaybooks.forEach(p => {
+            const html = `
+                <div class="bg-white border border-gray-200 p-4 rounded-lg flex justify-between items-center group">
+                    <div>
+                        <p class="font-semibold">${p.title}</p>
+                        <p class="text-sm text-gray-500">from ${p.company}</p>
+                    </div>
+                    <button class="playbook-view-btn text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded-full font-semibold hover:bg-gray-300" data-playbook-id="${p.id}">View</button>
+                </div>`;
+            if(categories[p.category]) categories[p.category].push(html);
+        });
+        
+        let fullHtml = '';
+        for (const [categoryName, items] of Object.entries(categories)) {
+            if (items.length > 0) {
+                fullHtml += `<div><h3 class="font-bold mb-4 pb-2 border-b border-gray-200">${categoryName}</h3><div class="space-y-4 text-sm">${items.join('')}</div></div>`;
+            }
+        }
+        
+        ui.ceoPlaybookList.innerHTML = fullHtml;
+
+        document.querySelectorAll('#ceo-playbook-list .playbook-view-btn').forEach(link => {
+            link.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); /* showPlaybookModal(e.currentTarget.dataset.playbookId); */ });
+        });
+    }
+
+    function populateVcPortfolio() {
+        // This function would also need to be converted to fetch from Firestore
+        // For now, it is a placeholder.
+    }
+    
+    // --- Initial Load ---
+    
+    const savedApiKey = localStorage.getItem('geminiApiKey');
+    if (savedApiKey) ui.apiKeyInput.value = savedApiKey;
+    initializeDictationService(savedApiKey);
+
+    loadReports();
+    loadPlaybooks();
+    
+    // --- Event Listeners Setup ---
+    Object.entries(ui.navLinks.ceo).forEach(([name, link]) => link?.addEventListener('click', (e) => { e.preventDefault(); showPage(name); }));
+    Object.entries(ui.navLinks.vc).forEach(([name, link]) => link?.addEventListener('click', (e) => { e.preventDefault(); showPage(`vc-${name}`); }));
+    
+    ui.bannerSettingsLink.addEventListener('click', (e) => { e.preventDefault(); showPage('settings'); });
+    ui.mobileMenuBtn.addEventListener('click', () => { ui.sidebar.classList.toggle('-translate-x-full'); });
+    ui.startRecordingBtn.addEventListener('click', () => dictationService?.toggleRecording());
+    if(ui.newReportBtn) ui.newReportBtn.addEventListener('click', () => showPage('dashboard'));
+    ui.saveApiKeyBtn.addEventListener('click', saveApiKey);
+    ui.viewToggle.addEventListener('change', switchView);
+
+    if(ui.authorPlaybookBtn) ui.authorPlaybookBtn.addEventListener('click', () => {});
+
+    document.querySelectorAll('#page-vc-playbooks .playbook-link').forEach(link => link.addEventListener('click', (e) => { e.preventDefault(); }));
+    
+    ui.modalCloseBtn.addEventListener('click', hideModal);
+    ui.modalOverlay.addEventListener('click', hideModal);
+    
+    ui.playbookCategoryFilters.addEventListener('click', (e) => {
+        const targetButton = e.target.closest('.playbook-category-btn');
+        if (targetButton) {
+            targetButton.classList.toggle('active');
+            populateCeoPlaybooks();
+        }
+    });
+
+});
+
